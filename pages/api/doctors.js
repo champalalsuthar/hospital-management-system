@@ -1,6 +1,7 @@
 
 import dbConnect from '../../utils/dbConnect';
-import Doctor from '../../models/Doctor';
+// import Doctor from '../../models/Doctor';
+import Doctor from '../../models/Doctors';
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {
