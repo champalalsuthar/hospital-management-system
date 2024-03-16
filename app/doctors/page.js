@@ -6,7 +6,7 @@ import DoctorCard from './_DoctorCard';
 import Footer from '../_components/Footer';
 import { Faq } from '../_components/Faq';
 import CategarySearch from '../_components/CategarySearch';
-
+import toast from 'react-hot-toast';
 
 const page = () => {
     const [doctors, setDoctors] = useState([]);
@@ -16,18 +16,21 @@ const page = () => {
                 // Fetch data from your API endpoint
                 const response = await fetch('/api/alldoctor');
 
-                if (!response.ok) {
+                if (response.status === 200) {
+                    const data = await response.json();
+                    // Set the retrieved data to the state
+                    console.log(data);
+                    // console.log(data.doctors);
+                    setDoctors(data.doctors);
+
+                }
+                else {
+                    toast.error('Retry...!');
                     throw new Error('Failed to fetch data');
                 }
 
-                const data = await response.json();
-
-                // Set the retrieved data to the state
-                // console.log(data);
-                // console.log(data.doctors);
-                setDoctors(data.doctors);
-                // console.log(doctors);
             } catch (error) {
+                toast.error('Error...!');
                 console.error('Error fetching data:', error);
             }
         };
@@ -35,6 +38,7 @@ const page = () => {
         // Call the fetchData function
         fetchData();
     }, []);
+    console.log(doctors);
 
     return (
         <>

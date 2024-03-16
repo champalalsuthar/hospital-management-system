@@ -38,14 +38,14 @@ export default async function handler(req, res) {
 
             // Fetch all doctors from the database
             const doctors = await allDoctor.find();
-
+            console.log(doctors);
             res.status(200).json({ success: true, doctors });
         } catch (error) {
             console.error('Error fetching doctors:', error);
             res.status(500).json({ success: false, error: 'Internal Server Error' });
         }
     }
-    if (req.method === 'DELETE') {
+    else if (req.method === 'DELETE') {
         try {
             await dbConnect();
 

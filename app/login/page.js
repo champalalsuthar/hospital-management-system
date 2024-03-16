@@ -83,12 +83,6 @@ const Page = () => {
 
 
 
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
-                // setUserLogin(true);
-                // setUser(responseData.existingUser);
-                // setUserRole(responseData.existingUser.role);
 
                 toast.success(`Login as ${data.role} `);
                 if (data.role === 'user') {
@@ -103,6 +97,12 @@ const Page = () => {
                 else {
                     router.push('/');
                 }
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
+                // setUserLogin(true);
+                // setUser(responseData.existingUser);
+                // setUserRole(responseData.existingUser.role);
             } else {
                 // Handle other errors here
                 toast.error('Failed to send form data');
