@@ -7,6 +7,8 @@ import React, { useState, useEffect } from 'react';
 import { Toaster } from "react-hot-toast";
 
 import { UserProvider, useUser } from "../context/UserContext";
+import { Faq } from "./_components/Faq";
+import Footer from "./_components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -60,6 +62,8 @@ export default function RootLayout({ children }) {
             })} */}
             {children}
           </div>
+          <Faq />
+          <Footer />
         </body>
       </html>
     </UserProvider>

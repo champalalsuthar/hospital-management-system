@@ -1,10 +1,18 @@
 
 
-import React from 'react'
+"use client"
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import StarRating from '../_components/StarRating';
+import Image from 'next/image'
+import { Search } from 'lucide-react'// pages/services/index.js
+import { useRouter } from 'next/navigation'; // Change this import
 
 const DoctorCard = ({ doctor }) => {
+    const router = useRouter(); // Use the Next.js router for navigation
+    const handleCardClick = (id) => {
+        router.push(`/doctors/${id}`);
+    };
     // const doctor=props.doctor;
     return (
         <article className="overflow-hidden rounded-lg shadow transition hover:shadow-lg p-3 border border-yellow-500 hover:border-blue-500">
@@ -15,8 +23,11 @@ const DoctorCard = ({ doctor }) => {
             /> */}
             <img alt="d1" src='/d1.jpg' className="h-52 w-full rounded-lg object-cover" />
 
+            <p className=" p-1 w-2/3 pl-1 mt-4   text-center font-semibold rounded-xl  bg-gray-50 text-xs text-blue-500">
+                {doctor.specialty.length > 20 ? doctor.specialty.slice(0, 12) + '...' : doctor.specialty}
+            </ p>
+
             <div className="bg-gray-300 w-1/2 pl-1 pt-4  text-start sm:pt-6 rounded-lg">
-                <p className=" p-1  text-center font-semibold rounded-xl  bg-gray-50 text-xs text-blue-500">{doctor.specialty} </ p>
 
                 <p>
                     <h3 className="mt-[2px] text-lg text-black font-bold">{doctor.name} </h3>
@@ -33,9 +44,18 @@ const DoctorCard = ({ doctor }) => {
 
 
             </div>
-            <Link href="/appointment#" className='mt-1'>
+
+            <button onClick={(e) => {
+                e.stopPropagation();
+                handleCardClick(doctor._id)
+            }} className='m-1'>
+                <button className='px-3 py-1  rounded-xl text-xs  bg-white hover:bg-blue-500  text-blue-500 border border-blue-500 hover:text-white'>More Details...</button>
+            </button>
+
+            <Link href="/appointment#" className='m-2'>
                 <button className='px-3 py-1  rounded-xl text-xs  bg-white hover:bg-blue-500  text-blue-500 border border-blue-500 hover:text-white'>Book Appointment</button>
             </Link>
+
         </article>
     )
 }

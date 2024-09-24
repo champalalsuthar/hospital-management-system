@@ -1,10 +1,31 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 
 function DoctorForm() {
+    const [department, setDepartment] = useState([]);
+    const fetchalldepartment = async () => {
+        try {
+            const response = await fetch('/api/department');
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch data');
+            }
+            console.log(response);
+            const data = await response.json();
+            // const activeFaqs = data.data.filter(faq => faq.status === "active");
+            // console.log(activeFaqs);
+            console.log(data.data);
+            setDepartment(data.data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+    useEffect(() => {
+        fetchalldepartment();
+    }, []);
     const [formData, setFormData] = useState({
         name: '',
         specialty: '',

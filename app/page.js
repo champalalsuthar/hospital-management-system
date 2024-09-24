@@ -20,14 +20,13 @@ export default function Home() {
       <Hero />
       {/* searchbar+categary */}
       <CategarySearch />
+      <PopularDoctors />
+
       <Stat />
       <HomeServices />
 
-      <PopularDoctors />
       <Testimonials />
-      <Faq/>
-      {/* <page /> */}
-      <Footer />
+      
     </div>
   );
 }

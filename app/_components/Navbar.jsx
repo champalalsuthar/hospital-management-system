@@ -77,6 +77,11 @@ function Navbar() {
                                         Doctors
                                     </Link>
                                 </li>
+                                <li className=" text-xl text-white py-2 px-6 text-center  border-b-2 md:border-b-0  hover:bg-purple-600  border-purple-900  md:hover:text-purple-600 md:hover:bg-transparent">
+                                    <Link href="/department" onClick={() => setNav(!nav)}>
+                                        Departments
+                                    </Link>
+                                </li>
 
                                 {userLogin ? (
                                     <>

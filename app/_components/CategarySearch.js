@@ -9,7 +9,7 @@ const CategarySearch = () => {
         <div className=' bg-gray-300' >
             <div className="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 md:py-16 lg:px-8">
                 <div className='  items-center flex flex-col gap-2 text-center' >
-                    <h2 className='font-bold text-4xl tracking-wide'>Search <span className='text-blue-500'>Doctors</span></h2>
+                    <h2 className='font-bold text-2xl tracking-wide'>Search <span className='text-blue-500'>Doctors</span></h2>
                     <h2 className=' text-gray-400 text-xl'>
                         Search Your Doctors and Book Appointment in one Click
                     </h2>
@@ -19,42 +19,42 @@ const CategarySearch = () => {
                     </div>
                 </div>
 
-                {/* <div className="mt-8">
+                <div className="mt-8">
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                         <div className="flex flex-col rounded-lg bg-blue-50 px-4 py-8 text-center">
                             <dt className="order-last text-lg font-medium text-blue-500"> Dentist</dt>
 
-                            <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">Dentist</dd>
+                            <dd className="text-2xl font-extrabold text-blue-600 md:text-xl">Dentist</dd>
                         </div>
 
                         <div className="flex flex-col rounded-lg bg-blue-50 px-4 py-8 text-center">
                             <dt className="order-last text-lg font-medium text-blue-500">Cardiologist</dt>
 
-                            <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">Cardiologist</dd>
+                            <dd className="text-2xl font-extrabold text-blue-600 md:text-xl">Cardiologist</dd>
                         </div>
                         <div className="flex flex-col rounded-lg bg-blue-50 px-4 py-8 text-center">
                             <dt className="order-last text-lg font-medium text-blue-500">Orthopedic</dt>
 
-                            <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">Orthopedic</dd>
+                            <dd className="text-2xl font-extrabold text-blue-600 md:text-xl">Orthopedic</dd>
                         </div>
                         <div className="flex flex-col rounded-lg bg-blue-50 px-4 py-8 text-center">
                             <dt className="order-last text-lg font-medium text-blue-500">Neurologist</dt>
 
-                            <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">Neurologist</dd>
+                            <dd className="text-2xl font-extrabold text-blue-600 md:text-xl">Neurologist</dd>
                         </div>
                         <div className="flex flex-col rounded-lg bg-blue-50 px-4 py-8 text-center">
                             <dt className="order-last text-lg font-medium text-blue-500">Otology</dt>
 
-                            <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">Otology</dd>
+                            <dd className="text-2xl font-extrabold text-blue-600 md:text-xl">Otology</dd>
                         </div>
                         <div className="flex flex-col rounded-lg bg-blue-50 px-4 py-8 text-center">
                             <dt className="order-last text-lg font-medium text-blue-500">General Doctors</dt>
 
-                            <dd className="text-4xl font-extrabold text-blue-600 md:text-5xl">General Doctor</dd>
+                            <dd className="text-2xl font-extrabold text-blue-600 md:text-xl">General Doctor</dd>
                         </div>
                     </div>
 
-                </div> */}
+                </div> 
             </div>
         </div>
     )

@@ -11,16 +11,21 @@ const PopularDoctors = () => {
             try {
                 // Fetch data from your API endpoint
                 const response = await fetch('/api/alldoctor');
-
-                if (!response.ok) {
+                if (response.status === 200) {
+                    const data = await response.json();
+                    const doctorsdata = data.doctors;
+                    const filteredDoctors = doctorsdata.filter(doctor => doctor.isActive && doctor.popular);
+                    // console.log(data);
+                    // console.log(data.doctors);
+                    // console.log(doctorsdata);
+                    // console.log(filteredDoctors);
+                    // setDoctors(filteredDoctors);
+                } else {
+                    toast.error('Failed to load departments');
                     throw new Error('Failed to fetch data');
                 }
 
-                const data = await response.json();
 
-                // console.log(data);
-                // console.log(data.doctors);
-                setDoctors(data.doctors);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -38,9 +43,8 @@ const PopularDoctors = () => {
 
                 <div className="ds-card-main-div grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4   gap-8">
                     {doctors.map((doctor, index) => (
-                        doctor.popular === false ? null : (
-                            <DoctorCard doctor={doctor} />
-                        )
+                        <DoctorCard key={index} doctor={doctor} />
+
                     ))}
                 </div>
             </div>
