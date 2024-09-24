@@ -1,4 +1,4 @@
-import Comment from "@/models/comment";
+import Comment from "../../models/Comment";
 import dbConnect from "@/utils/dbConnect";
 
 export default async function handler(req, res) {
