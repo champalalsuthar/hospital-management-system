@@ -2,8 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import DepartmentCard from './DepartmentCard';
-import Footer from '../_components/Footer';
-import { Faq } from '../_components/Faq';
 import toast from 'react-hot-toast';
 
 const DepartmentPage = () => {
@@ -54,8 +52,6 @@ const DepartmentPage = () => {
                             ))}
                         </div>
                     </div>
-                    <Faq />
-                    <Footer />
                 </div>
             ) : (
                 <div>Loading departments...</div>

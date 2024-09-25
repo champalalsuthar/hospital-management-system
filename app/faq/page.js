@@ -1,7 +1,6 @@
 
 "use client"
 import React, { useEffect, useState } from 'react'
-import Footer from '../_components/Footer';
 
 const page = () => {
     const [questions, setquestions] = useState([]);
@@ -72,8 +71,6 @@ const page = () => {
                     ))}
                 </div>
             </div>
-            <Footer />
-
         </div>
 
     )

@@ -9,7 +9,6 @@ const page = () => {
                 <h2 className='font-bold text-4xl tracking-wide m-4 text-blue-500 underline'>Appointment Form</h2>
             </div>
             <AppointmentForm />
-            <Footer />
         </div>
     )
 }

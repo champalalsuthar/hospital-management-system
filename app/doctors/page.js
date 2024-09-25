@@ -8,8 +8,6 @@ import { Search } from 'lucide-react'// pages/services/index.js
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation'; // Change this import
 import DoctorCard from './_DoctorCard';
-import Footer from '../_components/Footer';
-import { Faq } from '../_components/Faq';
 import CategarySearch from '../_components/CategarySearch';
 
 const page = () => {

@@ -34,8 +34,9 @@ export default async function handler(req, res) {
         //     }
         // }
         if (req.query.doctor) {
+            // console.log(req.query.doctor);
             try {
-                const comments = await Comment.find({ doctor: req.query.doctorId });
+                const comments = await Comment.find({ doctor: req.query.doctor });
                 return res.status(200).json({ success: true, data: comments });
             } catch (error) {
                 return res.status(400).json({ success: false, error: error.message });
@@ -53,7 +54,7 @@ export default async function handler(req, res) {
 
     if (req.method === 'DELETE') {
         try {
-            const { id } = req.body;
+            const { id } = req.query;
             const deletedComment = await Comment.findByIdAndDelete(id);
 
             if (!deletedComment) {
@@ -66,7 +67,6 @@ export default async function handler(req, res) {
             res.status(500).json({ success: false, error: 'Internal Server Error' });
         }
     }
-
     if (req.method === 'PUT') {
         try {
             const comment = await Comment.findByIdAndUpdate(req.query.id, req.body, {
@@ -74,13 +74,28 @@ export default async function handler(req, res) {
                 runValidators: true
             });
             if (!comment) {
-                return res.status(404).json({ success: false, message: 'Comment not found' });
+                return res.status(404).json({ success: false, message: 'Review not found' });
             }
             return res.status(200).json({ success: true, data: comment });
         } catch (error) {
             return res.status(400).json({ success: false, error: error.message });
         }
     }
+    // if (req.method === 'PUT') {
+    //     try {
+    //         const comment = await Comment.findByIdAndUpdate(req.query.id, req.body, {
+    //             new: true, // Return the updated document
+    //             runValidators: true, // Ensure the content is validated
+    //         });
+    //         if (!comment) {
+    //             return res.status(404).json({ success: false, message: 'Review not found' });
+    //         }
+    //         return res.status(200).json({ success: true, data: comment });
+    //     } catch (error) {
+    //         return res.status(400).json({ success: false, error: error.message });
+    //     }
+    // }
+
 
     else {
         res.status(405).json({ success: false, error: 'Method Not Allowed' });

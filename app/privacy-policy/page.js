@@ -2,7 +2,6 @@
 
 import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import Footer from "../_components/Footer";
 // import "../../Styles/Legal/LegalDocument.css";
 
 function page() {
@@ -52,7 +51,6 @@ function page() {
                     <Button>Back to Home</Button>
                 </a>
             </div>
-            <Footer />
         </div>
     );
 }

@@ -1,6 +1,5 @@
 "use client"
 import React, { useState, useEffect } from 'react';
-import Footer from '@/app/_components/Footer';
 import { Edit, Delete } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 
@@ -231,7 +230,6 @@ const page = () => {
                         )}
                     </table>
                 </div>
-                <Footer />
             </div >
             <div className={` w-full h-screen flex justify-center items-center absolute inset-0   ${delpopup ? 'bg-opacity-10 ' : 'hidden'}`}
             // onClick={() => setDelPopup(false)}

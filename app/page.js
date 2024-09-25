@@ -5,8 +5,6 @@ import CategarySearch from "./_components/CategarySearch";
 import HomeServices from "./_components/HomeServices";
 import DoctorCard from "./_components/DoctorCard";
 import PopularDoctors from "./_components/PopularDoctors";
-import Footer from "./_components/Footer";
-import { Faq } from "./_components/Faq";
 import Testimonials from "./_components/Testimonials";
 import Banner from "./_components/Banner";
 import Stat from "./_components/Stat";

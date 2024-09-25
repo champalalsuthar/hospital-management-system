@@ -96,7 +96,6 @@ const page = () => {
                     </div>
                 </div>
             </section>
-            <Footer />
         </div>
         // </userappcontact>
     )

@@ -7,11 +7,6 @@ const Stat = () => {
                 <div className="mx-auto max-w-3xl text-center">
                     {/* <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">Hospital state</h2> */}
                     <h2 className='font-bold text-4xl tracking-wide m-4 '>Hospital <span className='text-blue-500 '>Statistics</span></h2>
-
-
-                    {/* <p className="mt-4 text-gray-500 sm:text-xl">
-                       content
-                    </p> */}
                 </div>
 
                 <div className="mt-8 sm:mt-12">

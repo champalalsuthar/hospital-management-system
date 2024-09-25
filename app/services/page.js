@@ -6,8 +6,6 @@ import { useRouter } from 'next/navigation'; // Change this import
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import Footer from '../_components/Footer';
-import { Faq } from '../_components/Faq';
 
 
 
@@ -96,9 +94,6 @@ const page = () => {
                     ))}
                 </div>
             </div>
-            <Faq />
-            <Footer />
-
         </div>
     );
 };
