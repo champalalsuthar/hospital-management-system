@@ -27,22 +27,20 @@ const DoctorCard = ({ doctor }) => {
                 {doctor.specialty.length > 20 ? doctor.specialty.slice(0, 12) + '...' : doctor.specialty}
             </ p>
 
-            <div className="bg-gray-300 w-1/2 pl-1 pt-4  text-start sm:pt-6 rounded-lg">
+            <div className="bg-gray-300  pl-1 pt-2  text-start sm:pt-2 rounded-lg">
 
                 <p>
                     <h3 className="mt-[2px] text-lg text-black font-bold">{doctor.name} </h3>
                 </p>
 
-                <p className=" line-clamp-3 text-sm/relaxed font-semibold text-blue-500">{doctor.experience} Years </ p>
+                <p className=" line-clamp-3 text-sm/relaxed font-semibold text-blue-500">{doctor.experience} Years Experience  </ p>
                 {/* <div className=" ml-1 flex items-center justify-start mt-2">
                     <p className="text-sm text-gray-500">{doctor.rating}</p>
                     <span className="ml-1"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-star"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg></span>
                 </div> */}
-                <p className="line-clamp-3 text-sm/relaxed text-gray-500">{doctor.reviews} Reviews </p>
-                <a className=' line-clamp-3  text-red-600 text-sm/relaxed '>more info..</a>
+                {/* <p className="line-clamp-3 text-sm/relaxed text-gray-500">{doctor.reviews} Reviews </p> */}
+                {/* <a className=' line-clamp-3  text-red-600 text-sm/relaxed '>more info..</a> */}
                 <StarRating rating={doctor.rating} />
-
-
             </div>
 
             <button onClick={(e) => {

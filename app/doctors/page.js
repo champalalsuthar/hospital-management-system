@@ -9,9 +9,11 @@ import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation'; // Change this import
 import DoctorCard from './_DoctorCard';
 import CategarySearch from '../_components/CategarySearch';
+import Loading from '../_components/Loading/Loading'
 
 const page = () => {
     const [doctors, setDoctors] = useState([]);
+    const [loading, setLoading] = useState(true);
     const [filteredDoctors, setFilteredDoctors] = useState([]); // State for filtered doctors
     const [searchQuery, setSearchQuery] = useState(''); // State for search input
     useEffect(() => {
@@ -23,7 +25,7 @@ const page = () => {
                 if (response.status === 200) {
                     const data = await response.json();
                     // Set the retrieved data to the state
-                    console.log(data);
+                    // console.log(data);
                     // console.log(data.doctors);
                     setDoctors(data.doctors);
                     setFilteredDoctors(data.doctors);
@@ -36,6 +38,9 @@ const page = () => {
             } catch (error) {
                 toast.error('Error...!');
                 console.error('Error fetching data:', error);
+            }
+            finally {
+                setLoading(false);
             }
         };
 
@@ -57,6 +62,9 @@ const page = () => {
             setFilteredDoctors(filtered);
         }
     };
+    if (loading) return <div className=" bg-gray-300 ds py-20 px-5 text-center">
+        <Loading />
+    </div >;
 
     return (
         <>
@@ -64,7 +72,7 @@ const page = () => {
                 <div>
                     {/* <h2 className='font-bold text-4xl tracking-wide m-4 '> <span className='text-blue-500 '>ALL Doctors</span></h2> */}
                     <div className=' bg-gray-300' >
-                        <div className="mx-auto max-w-screen-xl px-4 py-12 sm:px-6 md:py-16 lg:px-8">
+                        <div className="mx-auto max-w-screen-xl px-4 py-8 sm:px-6 md:py-8 lg:px-8">
                             <div className='  items-center flex flex-col gap-2 text-center' >
                                 <h2 className='font-bold text-2xl tracking-wide'>Search <span className='text-blue-500'>Doctors</span></h2>
                                 <h2 className=' text-gray-400 text-xl'>
@@ -72,6 +80,7 @@ const page = () => {
                                 </h2>
                                 <div className="flex mt-3 w-full max-w-sm items-center space-x-2">
                                     <Input type="text" placeholder="Search" value={searchQuery}
+                                        className="focus:outline-none focus:ring focus:border-blue-500 border-2 border-blue-500"
                                         onChange={(e) => setSearchQuery(e.target.value)} />
                                     <Button type="button" onClick={handleSearch}><Search className='h-4 w-4 mr-2' /> Search</Button>
                                 </div>

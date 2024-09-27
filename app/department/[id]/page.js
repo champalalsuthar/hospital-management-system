@@ -44,8 +44,8 @@ const DepartmentDetailPage = ({ params }) => {
     if (!department) return <div className=" bg-gray-300 ds py-20 px-5 text-center"><p>Department not found</p></div>;
 
     return (
-        < div className="bg-gray-300 lg:mt-20" >
-        <div className=" bg-gradient-to-l from-slate-300 to-slate-100 text-slate-600  shadow-lg p-16 ">
+        < div className="bg-gray-300 mt-16" >
+        <div className=" bg-gradient-to-l from-slate-300 to-slate-100 text-slate-600  shadow-lg p-8 lg:p-16 ">
             <h1 className="text-3xl font-bold text-light-blue-900 mb-4">{department.name}</h1>
             <h2 className="text-xl font-semibold text-gray-700 mb-2">{department.description}</h2>
             <p className="text-gray-600 mb-4">

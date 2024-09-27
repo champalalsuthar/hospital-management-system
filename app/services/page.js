@@ -49,7 +49,7 @@ const page = () => {
         router.push(`/services/${id}`);
     };
     return (
-        <div className=" bg-gray-300 ds py-20 px-5 text-center">
+        <div className=" bg-gray-300 ds py- px-5 lg:py-30 text-center">
             <div>
                 <h2 className='font-bold text-4xl tracking-wide m-4 text-blue-500 underline'>All Services</h2>
 

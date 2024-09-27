@@ -17,7 +17,7 @@ export default function DoctorDetailPage({ params }) {
     const [newCommentContent, setNewCommentContent] = useState("");
     const [editingCommentId, setEditingCommentId] = useState(null);
     const { userLogin, setUserLogin, user, setUser, userrole, setUserRole } = useUser();
-    console.log(user.email);
+    // console.log(user.email);
     const fetchData = async () => {
         if (id) {
             try {
@@ -95,7 +95,7 @@ export default function DoctorDetailPage({ params }) {
         setSortedComments(sorted);
     }, [sortCriteria, commentData]);
 
-    console.log(commentData);
+    // console.log(commentData);
     // const changeHandler = (event) => {
     //     setFormData((prevData) => ({
     //         ...prevData,
@@ -119,7 +119,7 @@ export default function DoctorDetailPage({ params }) {
                 },
                 body: JSON.stringify(dataToSend),
             });
-            console.log(response);
+            // console.log(response);
             if (response.ok) {
                 const data = await response.json();
                 if (data.success) {
@@ -148,7 +148,8 @@ export default function DoctorDetailPage({ params }) {
             });
             if (response.ok) {
                 toast.success('review deleted successfully');
-                setSortedComments(sortedComments.filter(comment => comment._id !== commentId)); // Remove comment from UI
+                await fetchDoctorComments();
+                // setSortedComments(sortedComments.filter(comment => comment._id !== commentId)); // Remove comment from UI
             } else {
                 toast.error('Failed to delete review');
             }
@@ -165,30 +166,7 @@ export default function DoctorDetailPage({ params }) {
         setNewCommentContent(comment.content); // Set current content in input field
     };
 
-    // const handleSaveEdit = async (commentId) => {
-    //     try {
-    //         const response = await fetch(`/api/comment/${commentId}`, {
-    //             method: 'PUT',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify({ content: Comment }),
-    //         });
-    //         if (response.ok) {
-    //             toast.success('Review Updated Successfully');
-    //             const updatedComment = await response.json();
-    //             setSortedComments(sortedComments.map(comment =>
-    //                 comment._id === commentId ? updatedComment.data : comment
-    //             ));
-    //             setEditingCommentId(null); // Exit edit mode
-    //         } else {
-    //             toast.error('Failed to update Review');
-    //         }
-    //     } catch (error) {
-    //         console.error('Error updating Review:', error);
-    //         toast.error('Error updating Review');
-    //     }
-    // };
+
     const handleSaveEdit = async (commentId) => {
         try {
             const response = await fetch(`/api/comment?id=${commentId}`, {
@@ -198,7 +176,7 @@ export default function DoctorDetailPage({ params }) {
                 },
                 body: JSON.stringify({ content: newCommentContent }), // Sending only the updated content
             });
-    
+
             if (response.ok) {
                 toast.success('Review updated successfully');
                 const updatedComment = await response.json(); // Parse the updated comment
@@ -214,7 +192,7 @@ export default function DoctorDetailPage({ params }) {
             toast.error('Error updating Review');
         }
     };
-    
+
 
     if (loading) return <div className=" bg-gray-300 ds py-20 px-5 text-center">
         <Loading />
@@ -223,14 +201,13 @@ export default function DoctorDetailPage({ params }) {
     if (!doctor) return <div className=" bg-gray-300 ds py-20 px-5 text-center"><p>doctor not found</p></div>;
 
     return (
-        < div className="bg-gray-300 lg:mt-20" >
-            <div className=" bg-gradient-to-l from-slate-300 to-slate-100 text-slate-600  shadow-lg p-16 ">
+        < div className="bg-gray-300 mt-16" >
+            <div className=" bg-gradient-to-l from-slate-300 to-slate-100 text-slate-600  shadow-lg  p-8 lg:p-16 ">
                 <h1 className="text-3xl font-bold text-light-blue-900 mb-4">{doctor.name}</h1>
                 <h2 className="text-xl font-semibold text-gray-700 mb-2">{doctor.specialty}</h2>
                 <p className="text-gray-600 mb-4">
                     <StarRating rating={doctor.rating} /></p>
                 <p className="text-gray-600 mb-4">{doctor.reviews} <strong>Reviews</strong>  </p>
-
                 <div className="mx-0 lg:mx-4 bg-light-ray-100 p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
                     <h3 className="text-[22px] font-bold text-red-400 underline ">Details</h3>
                     {/* <p><strong>Price:</strong> ${doctor.price.toFixed(2)}</p> */}
@@ -242,28 +219,47 @@ export default function DoctorDetailPage({ params }) {
                     </p>
                 </div>
 
-                {/* <div className="mt-4 mx-0 lg:mx-4 bg-light-ray-100 p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
-                    <h3 className="text-[22px] font-bold text-red-400 underline">Available Slots</h3>
+                <div className="mt-4 mx-0 lg:mx-4 bg-light-ray-100 p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
+                    <h3 className="text-[22px] font-bold text-red-400 underline">Services:</h3>
                     <ul className="list-disc ml-5">
-                        {doctor.availableSlots.map((slot, index) => (
-                            <li key={index}>    
-                                {slot.dayOfWeek}: {slot.timeSlot}
-                            </li>
-                        ))}
+                        {doctor?.services?.length > 0 ? (
+                            doctor.services.map((slot, index) => (
+                                <li key={index}>
+                                    {slot}
+                                </li>
+                            ))
+                        ) : (
+                            <li>No service available</li>
+                        )}
                     </ul>
-                </div> */}
+                </div>
+                <div className="mt-4 mx-0 lg:mx-4 bg-light-ray-100 p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
+                    <h3 className="text-[22px] font-bold text-red-400 underline">Departments:</h3>
+                    <ul className="list-disc ml-5">
+                        {doctor?.department?.length > 0 ? (
+                            doctor.department.map((slot, index) => (
+                                <li key={index}>
+                                    {slot}
+                                </li>
+                            ))
+                        ) : (
+                            <li>No department available</li>
+                        )}
+                    </ul>
+                </div>
+
             </div>
-            <div className='w-full h-full bg-slate-200  '>
-                <p className="text-4xl text-center font-bold text-red-500 underline py-8"> Reviews </p>
-                <form autoComplete="on" className=" rounded-md p-4 bg-slate-200 w-2/3 flex flex-col gap-y-4  mx-auto"
-                    onSubmit={submithandler}
-                >
+
+            <div className='w-full h-full bg-slate-200'>
+                <p className="text-4xl text-center font-bold text-red-500 underline py-8">Reviews</p>
+                <form autoComplete="on" className="rounded-md p-4 bg-slate-200 w-2/3 flex flex-col gap-y-4 mx-auto"
+                    onSubmit={submithandler}>
                     <label className="w-full h-20">
                         <p className="text-[0.875rem] text-black mb-1 leading-[1.375]">
                             Reviews Text: <sup className="text-red-400">*</sup>
                         </p>
                         <textarea
-                            className="bg-slate-200 border p-1 outline-none border-red-300 rounded-[0.5rem] text-richblack-5 w-full"
+                            className="bg-slate-200 border p-2 outline-none border-red-300 rounded-[0.5rem] text-richblack-5 w-full transition-transform transform hover:scale-105 focus:scale-105"
                             name="Comment"
                             value={Comment}
                             required
@@ -271,13 +267,11 @@ export default function DoctorDetailPage({ params }) {
                             onChange={(e) => setComment(e.target.value)}
                         />
                     </label>
-                    <button type="submit" className='w-1/2 mx-auto rounded-lg p-1 bg-yellow-300 border border-sky-100'>Submit</button>
+                    <button type="submit" className='w-1/2 mx-auto rounded-lg p-1 bg-yellow-300 border border-sky-100 transition-transform transform hover:scale-110'>Submit</button>
                 </form>
-                <div className="rounded-lg p-6 bg-slate-200  w-3/4 flex flex-col gap-y-6 mx-auto ">
-                    <p className="text-2xl text-center font-bold text-blue-600 underline mb-2"> {commentData.length} Reviews </p>
-                    {/* <p className="text-sm text-center font-bold text-gray-500">
-                        Sort By <span className="text-blue-600 underline">Latest First</span>
-                    </p> */}
+
+                <div className="rounded-lg p-6 bg-slate-200 w-full lg:w-3/4 flex flex-col gap-y-6 mx-auto">
+                    <p className="text-2xl text-center font-bold text-blue-600 underline mb-2">{commentData.length} Reviews</p>
                     <p className="text-sm text-center font-bold text-gray-500 mb-4">
                         Sort By:
                         <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("latestFirst")}>Latest First</span> |
@@ -285,28 +279,36 @@ export default function DoctorDetailPage({ params }) {
                         <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("mostLiked")}>Most Liked</span> |
                         <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("mostDisliked")}>Most Disliked</span> |
                         <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("lessLiked")}>Less Liked</span> |
-                        <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("lessDisliked")}>Less Disliked</span> |
-                        <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("latestUpdated")}>Latest Updated</span>
+                        <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("lessDisliked")}>Less Disliked</span>
+                        {/* <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("latestUpdated")}>Latest Updated</span> */}
+                        {/* <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("latestFirst")}>Latest First</span> |
+                        <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("oldestFirst")}>Oldest First</span> |
+                        <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("mostLiked")}>Most Liked</span> |
+                        <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("mostDisliked")}>Most Disliked</span> */}
                     </p>
                     <ul className="divide-y divide-gray-300">
                         {sortedComments.map((comment) => (
                             <li key={comment._id} className="py-4">
-                                <div className="flex space-x-4 bg-white border border-gray-200 p-4 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                                    {/* Placeholder for profile picture */}
-                                    <div className="h-12 w-12 bg-blue-200 rounded-full flex items-center justify-center text-xl font-bold text-blue-600">
-                                        {comment.userEmail[0]}
-                                    </div>
+                                <div className="flex space-x-4 bg-white border border-gray-200 p-4 rounded-lg shadow-md transform hover:rotate-1 hover:translate-y-1 transition duration-300 ease-in-out">
 
-                                    <div className="flex-1">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <h3 className="text-md font-semibold text-blue-800">{comment.userEmail}</h3>
-                                            <div className="flex flex-col items-end">
-                                                <p className="text-sm text-gray-500">Created: {new Date(comment.createdAt).toLocaleString()}</p>
-                                                <p className="text-sm text-gray-500">Updated: {new Date(comment.updatedAt).toLocaleString()}</p>
+
+                                    <div className="">
+                                        <div className='flex items-center justify-between'>
+
+                                            <div className="h-12 w-12 bg-blue-200 rounded-full flex items-center justify-center text-xl font-bold text-blue-600">
+                                                {comment.userEmail[0]}
                                             </div>
+                                            {/* <div className="flex items-center justify-between mb-2"> */}
+                                            <h3 className="text-md font-semibold text-black">{comment.userEmail}</h3>
+                                            {/* <div className="flex flex-col items-end"> */}
+                                            <p className="text-sm text-gray-500">Created: {new Date(comment.createdAt).toLocaleString()}</p>
+                                            {/* <p className="text-sm text-gray-500">Updated: {new Date(comment.updatedAt).toLocaleString()}</p> */}
+                                            {/* </div> */}
+                                            {/* </div> */}
                                         </div>
-                                        {/* If the comment is in edit mode */}
-                                        {editingCommentId === comment._id &&  (
+
+
+                                        {editingCommentId === comment._id && (
                                             <>
                                                 <textarea
                                                     value={newCommentContent}
@@ -320,41 +322,36 @@ export default function DoctorDetailPage({ params }) {
                                                     Save
                                                 </button>
                                             </>
-                                        ) }
-
+                                        )}
 
                                         <p className="text-gray-700 mb-2">{comment.content}</p>
-                                        <div className="flex space-x-4 text-sm text-gray-500">
-                                            <span className="flex items-center">
-                                                👍 Likes: <span className="ml-1 text-blue-600">{comment.likes}</span>
-                                            </span>
-                                            <span className="flex items-center">
-                                                👎 Dislikes: <span className="ml-1 text-red-600">{comment.dislikes}</span>
-                                            </span>
+                                        <div className="flex space-x-6 text-sm text-gray-500">
+                                            <div className="flex items-center">
+                                                👍 <span className="ml-1 text-blue-600">{comment.likes}</span>
+                                            </div>
+                                            <div className="flex items-center">
+                                                👎 <span className="ml-1 text-red-600">{comment.dislikes}</span>
+                                            </div>
                                         </div>
+                                        {comment.userEmail === user.email && (
+                                            <div className="flex flex-row  justify-end items-center gap-2 mt-2 lg:mt-0">
+                                                <button onClick={() => handleEdit(comment)} className="bg-blue-500 text-white px-4 py-1 rounded-full shadow hover:bg-blue-600 transition-colors">
+                                                    Edit
+                                                </button>
+                                                <button onClick={() => handleDelete(comment._id)} className="bg-red-500 text-white px-4 py-1 rounded-full shadow hover:bg-red-600 transition-colors">
+                                                    Delete
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
-                                    {comment.userEmail === user.email && (
-                                        <div className="flex flex-col justify-center items-center gap-2">
-                                            <button onClick={() =>
-                                             handleEdit(comment)}
-                                                className="bg-blue-500 text-white px-4 py-1 rounded-full shadow hover:bg-blue-600 transition-colors">
-                                                Edit
-                                            </button>
-                                            <button
-                                                onClick={() => handleDelete(comment._id)}
-                                                className="bg-red-500 text-white px-4 py-1 rounded-full shadow hover:bg-red-600 transition-colors"
-                                            >
-                                                Delete
-                                            </button>
-                                        </div>
-                                    )}
+
                                 </div>
                             </li>
                         ))}
                     </ul>
                 </div>
-
             </div>
+
         </div >
     );
 }

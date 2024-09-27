@@ -13,7 +13,7 @@ export default async function handler(req, res) {
                 doctor
             });
 
-            
+
             await newComment.save();
             res.status(201).json({ success: true, comment: newComment, message: 'Comment added successfully' });
         } catch (error) {
