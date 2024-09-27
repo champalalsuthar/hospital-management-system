@@ -52,6 +52,10 @@ const serviceSchema = new mongoose.Schema({
     isActive: {
         type: Boolean,
         default: true // Whether the service is currently active
+    },
+    isTopActive: {
+        type: Boolean,
+        default: true // Whether the service is currently active
     }
 }, {
     timestamps: true

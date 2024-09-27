@@ -62,7 +62,7 @@ export default function RootLayout({ children }) {
             })} */}
             {children}
           </div>
-          <Faq />
+          {/* <Faq /> */}
           <Footer />
         </body>
       </html>

@@ -1,9 +1,12 @@
 
 "use client"
 import React, { useEffect, useState } from 'react'
+import Loading from '../_components/Loading/Loading';
 
 const page = () => {
     const [questions, setquestions] = useState([]);
+    const [loading, setLoading] = useState(true);
+
     const fetchallfaq = async () => {
         try {
             const response = await fetch('/api/faq');
@@ -30,11 +33,17 @@ const page = () => {
         } catch (error) {
             console.error('Error fetching data:', error);
         }
+        finally {
+            setLoading(false);
+        }
     };
     useEffect(() => {
         fetchallfaq();
     }, []);
 
+    if (loading) return <div className=" bg-gray-300 ds py-20 px-5 text-center">
+        <Loading />
+    </div >;
     return (
         <div className='bg-gray-300  mt-16 py-4'>
             <div className="space-y-4 bg-gray-300">

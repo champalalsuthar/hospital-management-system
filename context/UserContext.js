@@ -45,11 +45,11 @@ export const UserProvider = ({ children }) => {
     }, []);
 
     // Save user data to localStorage whenever it changes
-    // useEffect(() => {
-    //     console.log(JSON.stringify(user));
-    //     localStorage.setItem('user', JSON.stringify(user));
-    //     localStorage.setItem('userRole', userrole);
-    // }, [user, userrole]);
+    useEffect(() => {
+        console.log(JSON.stringify(user));
+        localStorage.setItem('user', JSON.stringify(user));
+        localStorage.setItem('userRole', userrole);
+    }, [user, userrole]);
 
     return (
         <UserContext.Provider value={{ userLogin, setUserLogin, user, setUser, userrole, setUserRole }}>

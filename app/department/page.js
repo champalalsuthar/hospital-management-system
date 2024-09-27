@@ -3,10 +3,12 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import DepartmentCard from './DepartmentCard';
 import toast from 'react-hot-toast';
+import Loading from '../_components/Loading/Loading';
 
 const DepartmentPage = () => {
     const [doctorData, setDoctorData] = useState('');
     const [departments, setDepartments] = useState([]);
+    const [loading, setLoading] = useState(true);
 
 
     let index = 0;
@@ -29,6 +31,8 @@ const DepartmentPage = () => {
             } catch (error) {
                 toast.error('Error loading data');
                 console.error('Error fetching department data:', error);
+            }finally {
+                setLoading(false);
             }
         };
 
@@ -36,6 +40,9 @@ const DepartmentPage = () => {
         fetchData();
     }, []);
 
+    if (loading) return <div className=" bg-gray-300 ds py-20 px-5 text-center">
+        <Loading />
+    </div >;
     return (
         <>
             {Array.isArray(departments) && departments.length > 0 ? (

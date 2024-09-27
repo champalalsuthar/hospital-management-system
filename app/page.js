@@ -17,14 +17,14 @@ export default function Home() {
       {/* <Banner/> */}
       <Hero />
       {/* searchbar+categary */}
-      <CategarySearch />
+      {/* <CategarySearch /> */}
       <PopularDoctors />
 
       <Stat />
       <HomeServices />
 
       <Testimonials />
-      
+
     </div>
   );
 }
