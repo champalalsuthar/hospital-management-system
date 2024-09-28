@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 
 const Testimonials = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [slidesToShow, setSlidesToShow] = useState(1); // Set default value for server-side rendering
+
     const data = [
         {
             name: "Arjun Sharma",
@@ -37,7 +39,22 @@ const Testimonials = () => {
     ];
 
 
-    const slidesToShow = window.innerWidth >= 768 ? 3 : 1;
+    useEffect(() => {
+        const handleResize = () => {
+            setSlidesToShow(window.innerWidth >= 768 ? 3 : 1);
+        };
+
+        // Set the initial value when the component is mounted
+        handleResize();
+
+        // Add event listener to update on window resize
+        window.addEventListener("resize", handleResize);
+
+        // Clean up event listener on component unmount
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
 
     const nextSlide = () => {
         setCurrentIndex((prevIndex) => (prevIndex + 1) % data.length);
@@ -72,7 +89,7 @@ const Testimonials = () => {
                             className="w-5 h-[15%] bg-gray-500 text-white rounded-full hover:bg-gray-400 transition"
                         >
                             <span className="sr-only">Previous Slide</span>
-                            &lt; {/* Icon for left button */}
+                            &lt;
                         </button>
                     </div>
                     <div className=" mt-8 flex justify-center">
@@ -86,7 +103,7 @@ const Testimonials = () => {
                                     />
                                     <div>
                                         <div className="flex justify-center gap-0.5">
-                                            {/* Filled Stars */}
+
                                             {[...Array(parseInt(testimonial.star))].map((_, i) => (
                                                 <svg
                                                     key={i}
@@ -102,7 +119,6 @@ const Testimonials = () => {
                                                     />
                                                 </svg>
                                             ))}
-                                            {/* Unfilled Stars */}
                                             {[...Array(5 - parseInt(testimonial.star))].map((_, i) => (
                                                 <svg
                                                     key={i + testimonial.star}
@@ -130,7 +146,6 @@ const Testimonials = () => {
                                 </p>
                             </blockquote>
                         ))}
-                        {/* Navigation Buttons */}
 
                     </div>
                     <div className="absolute inset-y-0 -right-4 flex just items-center z-12">
@@ -139,12 +154,14 @@ const Testimonials = () => {
                             className="w-5 h-[15%] bg-gray-500 text-white rounded-full hover:bg-gray-400 transition"
                         >
                             <span className="sr-only">Next Slide</span>
-                            &gt; {/* Icon for right button */}
+                            &gt;
                         </button>
                     </div>
                 </div>
             </div>
         </section>
+
+
     );
 };
 
