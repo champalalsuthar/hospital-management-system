@@ -4,8 +4,9 @@ import { useEffect, useState } from 'react';
 import Loading from '@/app/_components/Loading/Loading';
 import StarRating from '@/app/_components/StarRating';
 import toast from 'react-hot-toast';
-import Review from '@/app/_components/review';
 import { useUser } from "../../../context/UserContext";
+import Review from '@/app/_components/Review';
+
 
 export default function DoctorDetailPage({ params }) {
     const { id } = params;
