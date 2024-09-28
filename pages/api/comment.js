@@ -4,21 +4,71 @@ import dbConnect from "@/utils/dbConnect";
 export default async function handler(req, res) {
     await dbConnect();
 
+    // if (req.method === 'POST') {
+    //     const { userEmail, content, doctor } = req.body;
+    //     try {
+    //         const newComment = new Comment({
+    //             userEmail,
+    //             content,
+    //             doctor
+    //         });
+
+
+    //         await newComment.save();
+    //         res.status(201).json({ success: true, comment: newComment, message: 'Comment added successfully' });
+    //     } catch (error) {
+    //         console.error('Error creating comment:', error);
+    //         res.status(500).json({ success: false, error: 'Internal Server Error' });
+    //     }
+    // }
     if (req.method === 'POST') {
-        const { userEmail, content, doctor } = req.body;
-        try {
-            const newComment = new Comment({
-                userEmail,
-                content,
-                doctor
+        const { userEmail, content, doctor, service, department } = req.body;
+
+        // Check if required fields are present
+        if (!userEmail || !content || (!doctor && !service && !department)) {
+            return res.status(400).json({
+                success: false,
+                message: 'Missing required fields: userEmail and content'
             });
+        }
 
+        try {
+            // Determine which type of comment it is based on the provided field
+            let newComment;
+            if (doctor) {
+                newComment = new Comment({
+                    userEmail,
+                    content,
+                    doctor
+                });
+            } else if (service) {
+                newComment = new Comment({
+                    userEmail,
+                    content,
+                    service
+                });
+            } else if (department) {
+                newComment = new Comment({
+                    userEmail,
+                    content,
+                    department
+                });
+            }
 
+            // Save the comment
             await newComment.save();
-            res.status(201).json({ success: true, comment: newComment, message: 'Comment added successfully' });
+
+            res.status(201).json({
+                success: true,
+                comment: newComment,
+                message: 'Comment added successfully'
+            });
         } catch (error) {
             console.error('Error creating comment:', error);
-            res.status(500).json({ success: false, error: 'Internal Server Error' });
+            res.status(500).json({
+                success: false,
+                error: 'Internal Server Error'
+            });
         }
     }
 
@@ -43,6 +93,24 @@ export default async function handler(req, res) {
                 return res.status(400).json({ success: false, error: error.message });
             }
         }
+        // For fetching comments for a specific service or department
+        if (req.query.service) {
+            try {
+                const comments = await Comment.find({ service: req.query.service });
+                return res.status(200).json({ success: true, data: comments });
+            } catch (error) {
+                return res.status(400).json({ success: false, error: error.message });
+            }
+        }
+        if (req.query.department) {
+            try {
+                const comments = await Comment.find({ department: req.query.department });
+                return res.status(200).json({ success: true, data: comments });
+            } catch (error) {
+                return res.status(400).json({ success: false, error: error.message });
+            }
+        }
+
 
         try {
             const comments = await Comment.find();
@@ -82,22 +150,6 @@ export default async function handler(req, res) {
             return res.status(400).json({ success: false, error: error.message });
         }
     }
-    // if (req.method === 'PUT') {
-    //     try {
-    //         const comment = await Comment.findByIdAndUpdate(req.query.id, req.body, {
-    //             new: true, // Return the updated document
-    //             runValidators: true, // Ensure the content is validated
-    //         });
-    //         if (!comment) {
-    //             return res.status(404).json({ success: false, message: 'Review not found' });
-    //         }
-    //         return res.status(200).json({ success: true, data: comment });
-    //     } catch (error) {
-    //         return res.status(400).json({ success: false, error: error.message });
-    //     }
-    // }
-
-
     else {
         res.status(405).json({ success: false, error: 'Method Not Allowed' });
     }

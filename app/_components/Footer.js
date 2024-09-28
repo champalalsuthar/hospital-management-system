@@ -78,7 +78,7 @@ const Footer = () => {
                                     History
                                 </a>
                             </li> */}
-{/* 
+                            {/* 
                             <li>
                                 <a className="text-gray-700 transition hover:text-gray-700/75" href="#"> Meet the Team </a>
                             </li> */}
@@ -187,7 +187,7 @@ const Footer = () => {
                             </li>
                         </ul>
                         <ul className="mt-8 space-y-4 text-sm">
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d113856.4650882827!2d75.72298706962077!3d26.903033840217354!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396db420e65e5acb%3A0x2b5b8e5dec74b037!2sJaipur%20Hospital!5e0!3m2!1sen!2sin!4v1709971046591!5m2!1sen!2sin" width="90%" height="full" style={{ border: 0 }} allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d113856.4650882827!2d75.72298706962077!3d26.903033840217354!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396db420e65e5acb%3A0x2b5b8e5dec74b037!2sJaipur%20Hospital!5e0!3m2!1sen!2sin!4v1709971046591!5m2!1sen!2sin" width="90%" height="full" style={{ border: 0 }} allowFullScreen loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
                         </ul>
 
                     </div>

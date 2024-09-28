@@ -101,7 +101,7 @@ export default function DoctorDetailPage({ params }) {
                     </ul>
                 </div>
                 {/* <Review type="service" id={id} /> */}
-                {/* <Review type="department" id={id} /> */}
+                {/* <Review type="department" id={id} LogedUserEmail={LogedUserEmail}  /> */}
                 <Review type="doctor" id={id} LogedUserEmail={LogedUserEmail} />
             </div>
         </div >

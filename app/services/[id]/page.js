@@ -3,11 +3,16 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Loading from '@/app/_components/Loading/Loading';
+import { useUser } from '@/context/UserContext';
+import Review from '@/app/_components/Review';
+
 
 export default function ServiceDetailPage({ params }) {
     const { id } = params;
     const [service, setService] = useState(null);
     const [loading, setLoading] = useState(true);
+    const { userLogin, setUserLogin, user, setUser, userrole, setUserRole } = useUser();
+
     useEffect(() => {
         const fetchData = async () => {
             if (id) {
@@ -34,7 +39,7 @@ export default function ServiceDetailPage({ params }) {
 
         fetchData();
     }, [id]);
-
+    const LogedUserEmail = user.email
 
     if (loading) return <div className=" bg-gray-300 ds py-20 px-5 text-center">
         <Loading />
@@ -70,6 +75,8 @@ export default function ServiceDetailPage({ params }) {
                         ))}
                     </ul>
                 </div>
+                <Review type="service" id={id} LogedUserEmail={LogedUserEmail} />
+
             </div>
         </div>
     );

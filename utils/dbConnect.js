@@ -20,8 +20,8 @@ async function dbConnect() {
 
     if (!cached.promise) {
         const opts = {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
+            // useNewUrlParser: true,
+            // useUnifiedTopology: true,
             //   // useCreateIndex: true, // Recommended to avoid deprecation warning
             // // useFindAndModify: false, // Recommended to avoid deprecation warning
             // useNewUrlParser: true, // New connection string parser

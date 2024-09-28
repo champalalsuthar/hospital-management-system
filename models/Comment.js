@@ -25,7 +25,15 @@ const commentSchema = new mongoose.Schema({
     doctor: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'AllDoctor',
-        required: true  // Referencing the doctor being commented on
+        // required: true  // Referencing the doctor being commented on
+    },
+    service: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Service',  // Ensure this matches the name of your Service model
+    },
+    department: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Department',  // Ensure this matches the name of your Department model
     },
     isActive: {
         type: Boolean,

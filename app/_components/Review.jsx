@@ -18,15 +18,21 @@ const Review = ({ type, id, LogedUserEmail }) => {
     const [editingCommentId, setEditingCommentId] = useState(null);
     // const { userLogin, setUserLogin, user, setUser, userrole, setUserRole } = useUser();
     // console.log(user);
+    // console.log(id);
+    // console.log(type);
+    // console.log(LogedUserEmail);
 
     const fetchDoctorComments = async () => {
         if (id) {
             try {
+                // const response = await fetch(`/api/comment?${type}=${id}`); // Fetch doctor by ID
                 const response = await fetch(`/api/comment?${type}=${id}`); // Fetch doctor by ID
                 if (response.ok) {
                     const data = await response.json();
                     if (data.success) {
-                        setCommentData(data.data);
+                        const commentsdata = data.data;
+                        const filteredComments = commentsdata.filter(review => review.isActive);
+                        setCommentData(filteredComments);
                     } else {
                         console.error('Error fetching doctor:', data.error);
                     }
@@ -79,12 +85,29 @@ const Review = ({ type, id, LogedUserEmail }) => {
     const submithandler = async (event) => {
         event.preventDefault();
 
-        const dataToSend = {
-            userEmail: id,
-            content: Comment,
-            [type === 'doctor' ? 'doctor' : type === 'service' ? 'service' : 'department']: id,
-        };
-        // console.log(dataToSend);
+        let dataToSend;
+        if (type === 'doctor') {
+            dataToSend = {
+                userEmail: LogedUserEmail,
+                content: Comment,
+                doctor: id
+            };
+        }
+        else if (type === 'service') {
+            dataToSend = {
+                userEmail: LogedUserEmail,
+                content: Comment,
+                service: id
+            };
+        }
+        else {
+            dataToSend = {
+                userEmail: LogedUserEmail,
+                content: Comment,
+                department: id
+            };
+        }
+        console.log(dataToSend);
         try {
             const response = await fetch("/api/comment", {
                 method: 'POST',
@@ -132,6 +155,27 @@ const Review = ({ type, id, LogedUserEmail }) => {
         }
     };
 
+    const handleHide = async (commentId) => {
+        try {
+            const response = await fetch(`/api/comment?id=${commentId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ isActive: false }), // Send isActive: false to hide the comment
+            });
+
+            if (response.ok) {
+                toast.success('Review hidden successfully');
+                await fetchDoctorComments(); // Refresh the comments after hiding
+            } else {
+                toast.error('Failed to hide review');
+            }
+        } catch (error) {
+            console.error('Error hiding review:', error);
+            toast.error('Error hiding review');
+        }
+    };
     // Edit handler
     const handleEdit = async (comment) => {
         setEditingCommentId(comment._id); // Set comment in edit mode
@@ -156,7 +200,7 @@ const Review = ({ type, id, LogedUserEmail }) => {
                 setSortedComments(sortedComments.map(comment =>
                     comment._id === commentId ? updatedComment.data : comment // Update the comment in the state
                 ));
-                setEditingCommentId(null); // Exit edit mode
+                setEditingCommentId(null);
             } else {
                 toast.error('Failed to update Review');
             }
@@ -216,7 +260,7 @@ const Review = ({ type, id, LogedUserEmail }) => {
 
 
                                 <div className="">
-                                    <div className='flex items-center justify-between'>
+                                    <div className='flex items-center justify-between gap-4'>
 
                                         <div className="h-12 w-12 bg-blue-200 rounded-full flex items-center justify-center text-xl font-bold text-blue-600">
                                             {comment.userEmail[0]}
@@ -231,23 +275,18 @@ const Review = ({ type, id, LogedUserEmail }) => {
                                     </div>
 
 
-                                    {editingCommentId === comment._id && (
+                                    {editingCommentId === comment._id ? (
                                         <>
                                             <textarea
                                                 value={newCommentContent}
                                                 onChange={(e) => setNewCommentContent(e.target.value)}
-                                                className="w-full border border-gray-300 rounded-md p-2 mb-2"
+                                                className="w-full border border-gray-300 rounded-md p-2 m-2"
                                             />
-                                            <button
-                                                onClick={() => handleSaveEdit(comment._id)}
-                                                className="bg-blue-500 text-white px-4 py-1 rounded-full shadow hover:bg-blue-600 transition-colors"
-                                            >
-                                                Save
-                                            </button>
-                                        </>
-                                    )}
 
-                                    <p className="text-gray-700 mb-2">{comment.content}</p>
+                                        </>
+                                    ) : (<p className="text-gray-700 mb-2">{comment.content}</p>)}
+
+
                                     <div className="flex space-x-6 text-sm text-gray-500">
                                         <div className="flex items-center">
                                             👍 <span className="ml-1 text-blue-600">{comment.likes}</span>
@@ -256,16 +295,44 @@ const Review = ({ type, id, LogedUserEmail }) => {
                                             👎 <span className="ml-1 text-red-600">{comment.dislikes}</span>
                                         </div>
                                     </div>
-                                    {comment.userEmail === LogedUserEmail && (
-                                        <div className="flex flex-row  justify-end items-center gap-2 mt-2 lg:mt-0">
-                                            <button onClick={() => handleEdit(comment)} className="bg-blue-500 text-white px-4 py-1 rounded-full shadow hover:bg-blue-600 transition-colors">
-                                                Edit
-                                            </button>
-                                            <button onClick={() => handleDelete(comment._id)} className="bg-red-500 text-white px-4 py-1 rounded-full shadow hover:bg-red-600 transition-colors">
-                                                Delete
-                                            </button>
-                                        </div>
-                                    )}
+
+                                    <div className="flex flex-row justify-center items-center gap-2 mt-2 lg:mt-0">
+                                        {/* Hide Button */}
+                                        <button
+                                            onClick={() => handleHide(comment._id)}
+                                            className="bg-yellow-500 text-white px-4 py-1 rounded-full shadow hover:bg-yellow-600 transition-colors"
+                                        >
+                                            Hide
+                                        </button>
+
+                                        {/* Only show Edit/Delete buttons if not editing */}
+                                        {comment.userEmail === LogedUserEmail && (
+                                            <>
+                                                {editingCommentId !== comment._id &&
+                                                    <button
+                                                        onClick={() => handleEdit(comment)}
+                                                        className="bg-blue-500 text-white px-4 py-1 rounded-full shadow hover:bg-blue-600 transition-colors"
+                                                    >
+                                                        Edit
+                                                    </button>}
+                                                {editingCommentId === comment._id &&
+                                                    <button
+                                                        onClick={() => handleSaveEdit(comment._id)}
+                                                        className="bg-blue-500 text-white px-4 py-1 rounded-full shadow hover:bg-blue-600 transition-colors"
+                                                    >
+                                                        Save
+                                                    </button>}
+                                                <button
+                                                    onClick={() => handleDelete(comment._id)}
+                                                    className="bg-red-500 text-white px-4 py-1 rounded-full shadow hover:bg-red-600 transition-colors"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
+
+
                                 </div>
 
                             </div>
