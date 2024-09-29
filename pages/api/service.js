@@ -1,4 +1,4 @@
-import Service from "@/models/Service";
+import Service from "@/models/Services";
 import dbConnect from "@/utils/dbConnect";
 
 export default async function handler(req, res) {
