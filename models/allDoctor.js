@@ -47,11 +47,12 @@ const doctorSchema = new mongoose.Schema
         services: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Service',
-            required: true  // Referencing the Service schema
+            // required: true  // Referencing the Service schema
         }],
         department: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Department'
+            ref: 'Department',
+            // required: true
         },
         isActive: {
             type: Boolean,

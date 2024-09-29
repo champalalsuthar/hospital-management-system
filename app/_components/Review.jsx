@@ -298,12 +298,12 @@ const Review = ({ type, id, LogedUserEmail }) => {
 
                                     <div className="flex flex-row justify-center items-center gap-2 mt-2 lg:mt-0">
                                         {/* Hide Button */}
-                                        <button
+                                        {/* <button
                                             onClick={() => handleHide(comment._id)}
                                             className="bg-yellow-500 text-white px-4 py-1 rounded-full shadow hover:bg-yellow-600 transition-colors"
                                         >
                                             Hide
-                                        </button>
+                                        </button> */}
 
                                         {/* Only show Edit/Delete buttons if not editing */}
                                         {comment.userEmail === LogedUserEmail && (

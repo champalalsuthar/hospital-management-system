@@ -22,8 +22,8 @@ const DepartmentPage = () => {
                 if (response.status === 200) {
                     const data = await response.json();
                     console.log(data.data);
-                    // Set the retrieved data to the state
-                    setDepartments(data.data);
+                    const filteredDepartment = data.data.filter(dept => dept.status === "active");
+                    setDepartments(filteredDepartment);
                 } else {
                     toast.error('Failed to load departments');
                     throw new Error('Failed to fetch data');
@@ -31,7 +31,7 @@ const DepartmentPage = () => {
             } catch (error) {
                 toast.error('Error loading data');
                 console.error('Error fetching department data:', error);
-            }finally {
+            } finally {
                 setLoading(false);
             }
         };
