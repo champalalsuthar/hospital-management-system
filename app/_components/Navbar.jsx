@@ -10,14 +10,10 @@ import { useUser } from '../../context/UserContext'
 function Navbar() {
     const { userLogin, setUserLogin, user, setUser, userrole, setUserRole } = useUser();
 
-
     const [nav, setNav] = useState(false);
-
 
     const logout = () => {
         window.localStorage.removeItem('token');
-        window.localStorage.removeItem('logeduserrole');
-        window.localStorage.removeItem('logeduserdata');
         toast.success("Logout Success")
         setUserRole("none");
         setUser({});

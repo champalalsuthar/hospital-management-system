@@ -1,14 +1,16 @@
 "use client"
 import { Inter } from "next/font/google";
+import Head from 'next/head';
 import "./globals.css";
 import HomeHeader from "./_components/HomeHeader";
 import NavBar from "./_components/Navbar";
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Toaster } from "react-hot-toast";
 
 import { UserProvider, useUser } from "../context/UserContext";
 import { Faq } from "./_components/Faq";
 import Footer from "./_components/Footer";
+import Loading from "./_components/Loading/Loading";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,54 +20,31 @@ const inter = Inter({ subsets: ["latin"] });
 // };
 
 export default function RootLayout({ children }) {
-  // const { userLogin, setUserLogin } = useUser();
-  // const [userlogin, setUserLogin] = useState(false);
-  // const [user, setUser] = useState(false);
-  // const [userrole, setUserRole] = useState("doctor");
   const { userLogin, setUserLogin, user, setUser, userrole, setUserRole } = useUser();
 
+  // if (loading) {
+  //   return <Loading />;
+  // }
 
-  // console.log('userlogin:', userLogin);
-  // console.log('userrole:', userrole);
-  // console.log('user:', user);
-  // console.log('setUserLogin:', setUserLogin);
-  // useEffect(() => {
-  //   const token = window.localStorage.getItem('token');
-  //   if (token) {
-  //     // Token found, set authentication state or perform any necessary actions
-  //     // setUserLogin(true);
-  //   }
-  // }, []);
-  // useEffect(() => {
-  //   const token = window.localStorage.getItem('token');
-  //   if (token) {
-  //     // Token found, set authentication state or perform any necessary actions
-  //     setUserLogin(true);
-  //   }
-  // }, [userLogin]);
   return (
-    <UserProvider>
-      <html lang="en" >
-        <body className="w-full" >
-          <div className="w-full">
-            {/* <p className="pt-32">hi</p>./ */}
-            {/* <NavBar user={user} setUser={setUser} userrole={userrole} setUserRole={setUserRole} userlogin={userlogin} setUserLogin={setUserLogin} /> */}
-            <NavBar />
-            <Toaster position="top-center" />
-            {/* {children && React.cloneElement(children, {
-              user,
-              setUser,
-              userrole,
-              setUserRole,
-              userlogin,
-              setUserLogin,
-            })} */}
-            {children}
-          </div>
-          {/* <Faq /> */}
-          <Footer />
-        </body>
-      </html>
-    </UserProvider>
+    <>
+      <Head>
+        <title>Rk Clinic jaipur</title>
+        <meta name="description" content="Your project description" />
+        <link rel="icon" href="/profile.jpg" /> {/* Reference your favicon here */}
+      </Head>
+      <UserProvider>
+        <html lang="en" >
+          <body className="w-full" >
+            <div className="w-full">
+              <NavBar />
+              <Toaster position="top-center" />
+              {children}
+            </div>
+            <Footer />
+          </body>
+        </html>
+      </UserProvider>
+    </>
   );
 }

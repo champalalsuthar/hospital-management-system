@@ -1,26 +1,40 @@
-// PrivateRoute.js
-"use client"
+"use client";
 
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useUser } from '../../context/UserContext';
 import toast from 'react-hot-toast';
+import Loading from '@/app/_components/Loading/Loading';
 
 const PrivateRoutelogin = ({ children }) => {
-    const { user, userrole, setUserRole, userLogin, setUserLogin } = useUser();
-
+    const { userLogin } = useUser();
     const router = useRouter();
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        if (userLogin) {
+        if (userLogin === null) {
+            // Still loading, user login status hasn't been determined yet
+            setLoading(true);
+        } else if (userLogin) {
+            // User is already logged in
+            toast.error("Already Logged in...!");
             router.push('/');
-            toast.error("Already Logged in...!")
+            setLoading(false);
+        } else {
+            // User is not logged in, we can render the children
+            setLoading(false);
         }
     }, [userLogin, router]);
 
-    return <>
-        {children}
-    </>;
+    if (loading) {
+        return <Loading />; // You can add a spinner or loading component here
+    }
+
+    return (
+        <>
+            {children}
+        </>
+    );
 };
 
 export default PrivateRoutelogin;

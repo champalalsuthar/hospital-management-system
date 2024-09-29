@@ -24,14 +24,16 @@ const Stat = () => {
                     toast.error('Failed to load doctors');
                 }
 
-                // Fetch patients recovered data
-                // const patientsResponse = await fetch('/api/patientsrecovered');
-                // if (patientsResponse.status === 200) {
-                //     const data = await patientsResponse.json();
-                //     setPatientsRecovered(data.length); // Assuming the API returns an array of recovered patients
-                // } else {
-                //     toast.error('Failed to load recovered patients');
-                // }
+                const patientsResponse = await fetch('/api/appointments');
+                if (patientsResponse.status === 200) {
+                    const data = await patientsResponse.json();
+                    // const filteredpatients = data.data.filter(appointment => appointment.status === "complate");
+                    // console.log(data.data.length);
+                    // console.log(filteredpatients.length);
+                    setPatientsRecovered(data.data.length);
+                } else {
+                    toast.error('Failed to load recovered patients');
+                }
 
                 // Fetch total workers data
                 // const workersResponse = await fetch('/api/totalworkers');

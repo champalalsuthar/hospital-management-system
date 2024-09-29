@@ -5,54 +5,56 @@ const UserContext = createContext({});
 
 export const UserProvider = ({ children }) => {
     const [userLogin, setUserLogin] = useState(false);
-    // const [user, setUser] = useState({ name: "clsutahr", role: "admin" .});
     const [user, setUser] = useState({});
     const [userrole, setUserRole] = useState();
+    const [loading, setLoading] = useState(true); // New loading state
 
-    // Load user data from localStorage on component mount
     useEffect(() => {
         const token = window.localStorage.getItem('token');
-        // const storedUser = localStorage.getItem('user');
-        const logeduser = window.localStorage.getItem("logeduserdata");
-        const logeduserole = window.localStorage.getItem("logeduserrole");
 
-        if (token) {
-            // console.log(token);
+        const verifyToken = async () => {
+            if (token) {
+                try {
+                    const response = await fetch('/api/verifyToken', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`,
+                        },
+                    });
 
-            // let data=JSON.parse(storedUser);
-            // setUser(JSON.parse(storedUser));
-            // console.log(JSON.parse(logeduser));
-            // console.log("type of logeduser " + typeof (logeduser));
-            // console.log("type of data " + typeof (data));
+                    const data = await response.json();
+                    console.log(data);
+                    console.log(data.user);
+                    if (response.ok && data.success) {
+                        setUser(data.user);
+                        setUserRole(data.user.role);
+                        setUserLogin(true);
+                    } else {
+                        throw new Error(data.error || 'Invalid token');
+                    }
+                } catch (error) {
+                    console.error('Error verifying token:', error);
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('logeduserdata');
+                    localStorage.removeItem('logeduserrole');
+                    setUserLogin(false);
+                }
+            }
+            setLoading(false); // Set loading to false after checking token
 
-            const data = JSON.parse(logeduser);
-            // console.log(data);
-            // console.log(data);
-            // console.log("type of data " + typeof (data));
-            setUser(data)
-            // setUser(JSON.parse(storedUser));
-            // console.log(logeduser);
-            // console.log(user);
-            setUserRole(logeduserole);
-            setUserLogin(true);
-            // setInterval(() => {
-            // console.log(userLogin)
-            // }, 5);
+        };
 
-            // Also set user role if available
-            // setUserRole(storedUserRole);
-        }
+        verifyToken();
     }, []);
 
-    // Save user data to localStorage whenever it changes
-    // useEffect(() => {
-    //     console.log(JSON.stringify(user));
-    //     localStorage.setItem('user', JSON.stringify(user));
-    //     localStorage.setItem('userRole', userrole);
-    // }, [user, userrole]);
+    // console.log("user data in usercontext", user);
+    // console.log("userrole data in usercontext", userrole);
+    // console.log("userLogin status data in usercontext", userLogin);
 
     return (
         <UserContext.Provider value={{ userLogin, setUserLogin, user, setUser, userrole, setUserRole }}>
+            {/* {!loading ? null : children} */}
             {children}
         </UserContext.Provider>
     );

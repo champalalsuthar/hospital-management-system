@@ -16,3 +16,4 @@ const userSchema = new mongoose.Schema({
 const UserData = mongoose.models.UserData || mongoose.model('UserData', userSchema);
 
 export { UserData };
+

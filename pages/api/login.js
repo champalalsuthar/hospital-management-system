@@ -22,12 +22,9 @@ export default function handler(req, res) {
                             process.env.JWT_SECRET,
                             { expiresIn: '1h' }
                         );
-                        // console.log(existingUser);
-                        const myuser = JSON.stringify(existingUser);
-                        // console.log(myuser);
-
+                        
                         existingUser.password = undefined;
-
+                        const myuser = JSON.stringify(existingUser);
                         res.status(200).json({ success: true, token, myuser });
                         // console.log("200");
                     }).catch(error => {
