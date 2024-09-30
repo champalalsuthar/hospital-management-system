@@ -22,10 +22,11 @@ const DoctorCard = ({ doctor }) => {
                 className="h-56 w-full object-cover"
             /> */}
             <img alt="d1" src='/d1.jpg' className="h-52 w-full rounded-lg object-cover" />
-
-            <p className=" p-1 w-2/3 pl-1 mt-4   text-center font-semibold rounded-xl  bg-gray-50 text-xs text-blue-500">
-                {doctor.specialty.length > 20 ? doctor.specialty.slice(0, 12) + '...' : doctor.specialty}
-            </ p>
+            {doctor.specialty &&
+                <p className=" p-1 w-2/3 pl-1 mt-4   text-center font-semibold rounded-xl  bg-gray-50 text-xs text-blue-500">
+                    {doctor.specialty.length > 20 ? doctor.specialty.slice(0, 12) + '...' : doctor.specialty}
+                </ p>
+            }
 
             <div className="bg-gray-300  pl-1 pt-2  text-start sm:pt-2 rounded-lg">
 

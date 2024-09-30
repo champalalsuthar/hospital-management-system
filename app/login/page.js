@@ -68,10 +68,6 @@ const Page = () => {
                 // localStorage.setItem("logeduserdata", responseData.myuser);
                 // console.log("logeduserrole" + data.role);
                 // localStorage.setItem("logeduserrole", data.role);
-
-
-
-
                 toast.success(`Login as ${data.role} `);
                 if (data.role === 'user') {
                     router.push('/dashboard/user');

@@ -24,11 +24,9 @@ const page = () => {
 
                 if (response.status === 200) {
                     const data = await response.json();
-                    // Set the retrieved data to the state
-                    // console.log(data);
-                    // console.log(data.doctors);
-                    setDoctors(data.doctors);
-                    setFilteredDoctors(data.doctors);
+                    const filtereddoctor = data.doctors.filter(doc => doc.role==="doctor" && doc.isActive );
+                    setDoctors(filtereddoctor);
+                    setFilteredDoctors(filtereddoctor);
                 }
                 else {
                     toast.error('Retry...!');

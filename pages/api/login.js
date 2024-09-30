@@ -2,14 +2,15 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import dbConnect from '../../utils/dbConnect';
-import { UserData } from '../../models/UserData';
+import allDoctor from '@/models/allDoctor';
+
 
 export default function handler(req, res) {
     if (req.method === 'POST') {
         dbConnect().then(() => {
             const { email, password } = req.body;
 
-            UserData.findOne({ email: email }).then(existingUser => {
+            allDoctor.findOne({ email: email }).then(existingUser => {
                 if (existingUser) {
                     bcrypt.compare(password, existingUser.password).then(isPasswordMatch => {
                         if (!isPasswordMatch) {

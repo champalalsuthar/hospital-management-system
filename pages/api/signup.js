@@ -8,12 +8,12 @@ export default async function handler(req, res) {
         try {
             await dbConnect();
 
-            const { first_name, last_name, email, password, password_confirmation, marketing_accept, role } = req.body;
+            const { first_name, last_name, email, password, marketing_accept, role } = req.body;
 
             // Check if passwords match
-            if (password !== password_confirmation) {
-                return res.status(303).json({ success: false, error: 'Passwords do not match' });
-            }
+            // if (password !== password_confirmation) {
+            //     return res.status(303).json({ success: false, error: 'Passwords do not match' });
+            // }
             const existingUser = await UserData.findOne({ email });
 
             if (existingUser) {

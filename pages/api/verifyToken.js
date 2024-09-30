@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
-import { UserData } from '@/models/UserData';
 import dbConnect from '@/utils/dbConnect';
+import allDoctor from '@/models/allDoctor';
 
 export default async function handler(req, res) {
     try {
@@ -15,8 +15,7 @@ export default async function handler(req, res) {
             // console.log("decoded", decoded);
 
             await dbConnect();
-            // console.log(UserData);
-            const user = await UserData.findById(decoded.userId).select('-password');
+            const user = await allDoctor.findById(decoded.userId).select('-password');
 
 
             if (!user) {

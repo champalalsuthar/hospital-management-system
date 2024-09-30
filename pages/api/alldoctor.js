@@ -1,31 +1,45 @@
+import mongoose from 'mongoose';
 import allDoctor from "@/models/allDoctor";
 import dbConnect from "@/utils/dbConnect";
+import bcrypt from 'bcrypt';
+
 
 
 export default async function handler(req, res) {
     await dbConnect();
 
     if (req.method === 'POST') {
-        const { name, specialty, rating, reviews, services, email, experience, popular } = req.body;
+        const { first_name, last_name, name, password, specialty, phoneNumber, email, rating, reviews, services, department, isActive, experience, imageUrl, popular, marketing_accept, role } = req.body;
         try {
+            console.log('Received data:', req.body);
             const existingdoctor = await allDoctor.findOne({ email });
             if (existingdoctor) {
                 return res.status(302).json({ success: false, error: "Email allready exsit" });
             }
+            const hashedPassword = await bcrypt.hash(password, 10);
 
             const newDoctor = new allDoctor({
+                first_name,
+                last_name,
                 name,
-                specialty,
-                rating,
-                reviews,
-                services,
+                password: hashedPassword,
                 email,
-                experience,
-                popular
+                role,
+                isActive,
+                marketing_accept,
+                imageUrl,
+                specialty: role === 'doctor' ? specialty : null,
+                phoneNumber: role === 'doctor' ? phoneNumber : null,
+                rating: role === 'doctor' ? rating : 0,
+                reviews: role === 'doctor' ? reviews : 0,
+                services: role === 'doctor' ? services : [],
+                department: role === 'doctor' ? department : null,
+                experience: role === 'doctor' ? experience : null,
+                popular: role === 'doctor' ? popular : false,
             });
 
             await newDoctor.save();
-            res.status(201).json({ success: true, doctor: newDoctor, message: ' successfully' });
+            res.status(201).json({ success: true, doctor: newDoctor, message: ' Registered Successfully' });
         } catch (error) {
             console.error('Error creating doctor:', error);
             res.status(500).json({ success: false, error: 'Internal Server Error' });
@@ -46,7 +60,6 @@ export default async function handler(req, res) {
         }
         try {
 
-            // Fetch all doctors from the database
             const doctors = await allDoctor.find();
             // console.log(doctors);
             res.status(200).json({ success: true, doctors });

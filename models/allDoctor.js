@@ -2,18 +2,33 @@ const mongoose = require('mongoose');
 
 const doctorSchema = new mongoose.Schema
     ({
+        first_name: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        last_name: {
+            type: String,
+            // required: true,
+            trim: true
+        },
         name: {
+            type: String,
+            required: true,
+            trim: true
+        },
+        password: {
             type: String,
             required: true,
             trim: true
         },
         specialty: {
             type: String,
-            required: true
+            // required: true
         },
         phoneNumber: {
             type: String,
-            required: true,
+            // required: true,
             trim: true,
             // validate: {
             //     validator: function (v) {
@@ -24,6 +39,7 @@ const doctorSchema = new mongoose.Schema
         },
         email: {
             type: String,
+            required: true,
             trim: true,
             unique: true,
             // validate: {
@@ -54,9 +70,29 @@ const doctorSchema = new mongoose.Schema
             ref: 'Department',
             // required: true
         },
+        popular: {
+            type: Boolean,
+            default: false
+        },
         isActive: {
             type: Boolean,
             default: true
+        },
+        experience: {
+            type: Number,
+            default: 0,
+            min: 0
+        },
+        imageUrl: {
+            type: String,
+        },
+        marketing_accept: {
+            type: Boolean,
+            default: false
+        },
+        role: {
+            type: String,
+            default: 'user',
         }
     }, {
         timestamps: true

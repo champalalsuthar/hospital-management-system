@@ -84,6 +84,12 @@ const Review = ({ type, id, LogedUserEmail }) => {
 
     const submithandler = async (event) => {
         event.preventDefault();
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            toast.error("Please Login First");
+            return;
+        }
 
         let dataToSend;
         if (type === 'doctor') {
@@ -247,11 +253,6 @@ const Review = ({ type, id, LogedUserEmail }) => {
                     <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("mostDisliked")}>Most Disliked</span> |
                     <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("lessLiked")}>Less Liked</span> |
                     <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("lessDisliked")}>Less Disliked</span>
-                    {/* <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("latestUpdated")}>Latest Updated</span> */}
-                    {/* <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("latestFirst")}>Latest First</span> |
-                <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("oldestFirst")}>Oldest First</span> |
-                <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("mostLiked")}>Most Liked</span> |
-                <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("mostDisliked")}>Most Disliked</span> */}
                 </p>
                 <ul className="divide-y divide-gray-300">
                     {sortedComments.map((comment) => (

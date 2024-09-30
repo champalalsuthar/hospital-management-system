@@ -33,47 +33,55 @@ const Page = () => {
         e.preventDefault();
         if (!formData.first_name || !formData.last_name || !formData.email || !formData.password || !formData.password_confirmation) {
             toast.error('plese fill required fields!');
-            // alert("plese fill required fields");
-            // console.log("plese fill required fields");
             return;
         }
-        else if (formData.password.length < 6 && formData.password_confirmation.length < 6) {
+        else if (formData.password.length < 6) {
             toast.error('Password length must be at least 6 characters!');
             // alert("Password length must be at least 6 characters");
             return;
         }
-        // console.log(JSON.stringify(formData));
+        else if (formData.password !== formData.password_confirmation) {
+            toast.error('Passwords do not match!');
+            return;
+        }
         try {
+            const datatosend = {
+                first_name: formData.first_name,
+                last_name: formData.last_name,
+                name: formData.first_name + ' ' + formData.last_name,
+                password: formData.password,
+                email: formData.email,
+                isActive: true,
+                marketing_accept: formData.marketing_accept,
+                role: 'user',
+                imageUrl: "",
+                specialty: null,
+                phoneNumber: null,
+                rating: 0,
+                reviews: 0,
+                services: [],
+                department: null,
+                experience: null,
+                popular: false,
+            }
             // Send form data to the server
-            const response = await fetch('/api/signup', {
+            const response = await fetch('/api/alldoctor', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(datatosend),
             });
 
             if (response.ok) {
-                // Form data sent successfully, you can redirect or show a success message
                 toast.success("account created successfully");
                 router.push('/login');
-                // alert('account created');
-                // console.log('Form data sent successfully');
-                router.push('/login');
-            }
-            else if (response.status === 303) {
-                toast.error("password-missmatch");
-                // console.log("password-missmatch");
-                // alert('password missmatch');
             }
             else if (response.status === 302) {
-                // console.log("Email already exists");
                 toast.error("Email already exists");
-                // alert("Email already exists");
-                router.push('/login');
+                // router.push('/login');
             }
             else {
-                // Handle errors here
                 toast.error('Failed to send form data');
                 console.error('Failed to send form data');
             }

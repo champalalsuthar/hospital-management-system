@@ -51,34 +51,35 @@ const page = () => {
         fetchData();
     }, []);
     const deleteuser = async (userid) => {
-        try {
-            const response = await fetch('/api//signup', {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id: userid })
-            });
+        // try {
+        //     const response = await fetch('/api/signup', {
+        //         method: 'DELETE',
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         },
+        //         body: JSON.stringify({ id: userid })
+        //     });
 
-            const data = await response.json();
+        //     const data = await response.json();
 
-            if (data.success) {
-                setDelPopup(false);
-                toast.success("Your Account Permanently Deleted");
-                console.log("Your deleted successfully");
-                router.push('/signup');
-                // Handle success, maybe update UI or show a success message
-            } else {
-                setDelPopup(false);
-                toast.success("Please Retry.......!");
-                console.error("Error deleting doctor:", data.error);
-                // Handle error, maybe show an error message to the user
-            }
-        } catch (error) {
-            console.error("Error deleting doctor:", error);
-            toast.error("Error deleting doctor. Please try again later.");
-            // Handle error, maybe show an error message to the user
-        }
+        //     if (data.success) {
+        //         setDelPopup(false);
+        //         toast.success("Your Account Permanently Deleted");
+        //         console.log("Your deleted successfully");
+        //         router.push('/signup');
+        //         // Handle success, maybe update UI or show a success message
+        //     } else {
+        //         setDelPopup(false);
+        //         toast.success("Please Retry.......!");
+        //         console.error("Error deleting doctor:", data.error);
+        //         // Handle error, maybe show an error message to the user
+        //     }
+        // } catch (error) {
+        //     console.error("Error deleting doctor:", error);
+        //     toast.error("Error deleting doctor. Please try again later.");
+        //     // Handle error, maybe show an error message to the user
+        // }
+        toast.success("Your Account Permanently Deleted");
     };
     const deleteAppointment = async (id) => {
         try {
