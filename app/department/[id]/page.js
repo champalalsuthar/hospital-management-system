@@ -50,7 +50,7 @@ const DepartmentDetailPage = ({ params }) => {
     if (!department) return <div className=" bg-gray-300 ds py-20 px-5 text-center"><p>Department not found</p></div>;
 
     return (
-        < div className="bg-gray-300 mt-16" >
+        < div className=" bg-gradient-to-l from-slate-300 to-slate-100 mt-16" >
             <div className=" bg-gradient-to-l from-slate-300 to-slate-100 text-slate-600  shadow-lg p-8 lg:p-16 ">
                 <h1 className="text-3xl font-bold text-light-blue-900 mb-4">{department.name}</h1>
                 <h2 className="text-xl font-semibold text-gray-700 mb-2">{department.description}</h2>
@@ -69,7 +69,6 @@ const DepartmentDetailPage = ({ params }) => {
                         Status: {department.isActive ? 'Active' : 'Inactive'}
                     </p>
                 </div>
-                <Review type="department" id={id} LogedUserEmail={LogedUserEmail} />
 
                 {/* <div className="mt-4 mx-0 lg:mx-4 bg-light-ray-100 p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
                 <h3 className="text-[22px] font-bold text-red-400 underline">Available Slots</h3>
@@ -82,6 +81,7 @@ const DepartmentDetailPage = ({ params }) => {
                 </ul>
             </div> */}
             </div>
+            <Review type="department" id={id} LogedUserEmail={LogedUserEmail} />
         </div >
     );
 };

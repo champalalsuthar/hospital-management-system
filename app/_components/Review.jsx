@@ -217,16 +217,16 @@ const Review = ({ type, id, LogedUserEmail }) => {
     if (!commentData) return <div className=" bg-gray-300 ds py-20 px-5 text-center"><p>doctor not found</p></div>;
 
     return (
-        <div className='w-full h-full bg-slate-200'>
+        <div className='w-full h-full bg-gradient-to-l from-slate-300 to-slate-100'>
             <p className="text-4xl text-center font-bold text-red-500 underline py-8">Reviews</p>
-            <form autoComplete="on" className="rounded-md p-4 bg-slate-200 w-2/3 flex flex-col gap-y-4 mx-auto"
+            <form autoComplete="on" className="rounded-md p-4 w-full lg:w-3/4 flex flex-col gap-y-4 mx-auto p-6"
                 onSubmit={submithandler}>
                 <label className="w-full h-20">
                     <p className="text-[0.875rem] text-black mb-1 leading-[1.375]">
                         Reviews Text: <sup className="text-red-400">*</sup>
                     </p>
                     <textarea
-                        className="bg-slate-200 border p-2 outline-none border-red-300 rounded-[0.5rem] text-richblack-5 w-full transition-transform transform hover:scale-105 focus:scale-105"
+                        className=" border p-2 outline-none border-red-300 rounded-[0.5rem] text-richblack-5 w-full transition-transform transform "
                         name="Comment"
                         value={Comment}
                         required
@@ -234,10 +234,10 @@ const Review = ({ type, id, LogedUserEmail }) => {
                         onChange={(e) => setComment(e.target.value)}
                     />
                 </label>
-                <button type="submit" className='w-1/2 mx-auto rounded-lg p-1 bg-yellow-300 border border-sky-100 transition-transform transform hover:scale-110'>Submit</button>
+                <button type="submit" className='w-1/2 lg:w-1/4 mx-auto rounded-lg p-1 bg-yellow-300 border border-sky-100 transition-transform transform hover:scale-110'>Submit</button>
             </form>
 
-            <div className="rounded-lg p-6 bg-slate-200 w-full lg:w-3/4 flex flex-col gap-y-6 mx-auto">
+            <div className="rounded-lg p-6  w-full lg:w-3/4 flex flex-col gap-y-6 mx-auto">
                 <p className="text-2xl text-center font-bold text-blue-600 underline mb-2">{commentData.length} Reviews</p>
                 <p className="text-sm text-center font-bold text-gray-500 mb-4">
                     Sort By:
@@ -262,7 +262,7 @@ const Review = ({ type, id, LogedUserEmail }) => {
                                 <div className="">
                                     <div className='flex items-center justify-between gap-4'>
 
-                                        <div className="h-12 w-12 bg-blue-200 rounded-full flex items-center justify-center text-xl font-bold text-blue-600">
+                                        <div className="h-12 w-12 bg-blue-200 rounded-full flex items-center justify-center text-xl font-bold text-blue-600 uppercase">
                                             {comment.userEmail[0]}
                                         </div>
                                         {/* <div className="flex items-center justify-between mb-2"> */}
