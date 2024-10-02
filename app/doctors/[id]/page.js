@@ -101,7 +101,7 @@ export default function DoctorDetailPage({ params }) {
                     </div>
                     <h1 className="text-3xl font-bold text-light-blue-900 mb-4">{doctor.name}</h1>
                     {/* <h2 className="text-xl font-semibold text-gray-700 mb-4">{doctor.specialty}</h2> */}
-                    {doctor.specialty && <p className=" p-1 w-1/5 pl-1 text-sm font-semibold  mb-4 text-center rounded-xl bg-gray-50 text-blue-500 border border-1 border-blue-500">
+                    {doctor.specialty && <p className=" p-1 w-3/5 lg:w-1/6 pl-1 text-sm font-semibold  mb-4 text-center rounded-xl bg-gray-50 text-blue-500 border border-1 border-blue-500">
                         {doctor.specialty.length > 20 ? doctor.specialty.slice(0, 12) + '...' : doctor.specialty}
                     </ p>}
                     <p className=" line-clamp-3 text-sm/relaxed font-semibold text-blue-500 mb-4">{doctor.experience} Years Experience  </ p>

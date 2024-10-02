@@ -11,10 +11,10 @@ export const Faq = () => {
             if (!response.ok) {
                 throw new Error('Failed to fetch data');
             }
-            console.log(response);
+            // console.log(response);
             const data = await response.json();
             const activeFaqs = data.data.filter(faq => faq.status === "active");
-            console.log(activeFaqs);
+            // console.log(activeFaqs);
             setquestions(activeFaqs);
         } catch (error) {
             console.error('Error fetching data:', error);

@@ -262,19 +262,22 @@ const Review = ({ type, id, LogedUserData }) => {
 
 
                                 <div className="">
-                                    <div className='flex items-center justify-between gap-4'>
-
+                                    <div className='flex items-center justify-start gap-4'>
                                         <div className="h-12 w-12 bg-blue-200 rounded-full flex items-center justify-center text-xl font-bold text-blue-600 uppercase">
                                             {comment.userEmail[0]}
                                         </div>
                                         {/* <div className="flex items-center justify-between mb-2"> */}
-                                        <h3 className="text-md font-semibold text-black">{comment.userEmail}</h3>
+                                        <h3 className="text-md font-semibold text-black">
+                                            {comment.userEmail.length > 25 ? comment.userEmail.slice(0, 22) + '...' : comment.userEmail}
+                                        </h3>
+                                        <p className="hidden lg:inline-block text-sm text-gray-500">Created: {new Date(comment.createdAt).toLocaleString()}</p>
+
                                         {/* <div className="flex flex-col items-end"> */}
-                                        <p className="text-sm text-gray-500">Created: {new Date(comment.createdAt).toLocaleString()}</p>
                                         {/* <p className="text-sm text-gray-500">Updated: {new Date(comment.updatedAt).toLocaleString()}</p> */}
                                         {/* </div> */}
                                         {/* </div> */}
                                     </div>
+                                    <p className=" inline-block  lg:hidden text-sm text-gray-500">Created: {new Date(comment.createdAt).toLocaleString()}</p>
 
 
                                     {editingCommentId === comment._id ? (

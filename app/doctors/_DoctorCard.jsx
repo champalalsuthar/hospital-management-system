@@ -7,6 +7,8 @@ import StarRating from '../_components/StarRating';
 import Image from 'next/image'
 import { Search } from 'lucide-react'// pages/services/index.js
 import { useRouter } from 'next/navigation'; // Change this import
+import { useUser } from "../../context/UserContext";
+
 
 const DoctorCard = ({ doctor }) => {
     const router = useRouter(); // Use the Next.js router for navigation
@@ -14,6 +16,8 @@ const DoctorCard = ({ doctor }) => {
         router.push(`/doctors/${id}`);
     };
     // const doctor=props.doctor;
+    const { userLogin, setUserLogin, user, setUser, userrole, setUserRole } = useUser();
+
     return (
         <article className="overflow-hidden rounded-lg shadow transition hover:shadow-lg p-3 border border-yellow-500 hover:border-blue-500 w-full">
             {/* <div style={{ width: '255px', height: '350px', position: 'relative' }}> */}
@@ -33,8 +37,8 @@ const DoctorCard = ({ doctor }) => {
             />
             {/* </div> */}
             {doctor.specialty &&
-                <p className=" p-1 w-2/3 pl-1 mt-4   text-center font-semibold rounded-xl  bg-gray-50 text-xs text-blue-500">
-                    {doctor.specialty.length > 20 ? doctor.specialty.slice(0, 12) + '...' : doctor.specialty}
+                <p className=" p-1 w-1/2 pl-1 mt-4   text-center font-semibold rounded-xl  bg-gray-50 text-xs text-blue-500">
+                    {doctor.specialty.length > 20 ? doctor.specialty.slice(0, 15) + '...' : doctor.specialty}
                 </ p>
             }
 
@@ -54,11 +58,11 @@ const DoctorCard = ({ doctor }) => {
             }} className='m-1'>
                 <button className='px-3 py-1  rounded-xl text-xs  bg-white hover:bg-blue-500  text-blue-500 border border-blue-500 hover:text-white'>More Details...</button>
             </button>
-
-            <Link href="/appointment#" className='m-2'>
-                <button className='px-3 py-1  rounded-xl text-xs  bg-white hover:bg-blue-500  text-blue-500 border border-blue-500 hover:text-white'>Book Appointment</button>
-            </Link>
-
+            {userrole === "user" &&
+                <Link href="/appointment#" className='m-2'>
+                    <button className='px-3 py-1  rounded-xl text-xs  bg-white hover:bg-blue-500  text-blue-500 border border-blue-500 hover:text-white'>Book Appointment</button>
+                </Link>
+            }
         </article>
     )
 }

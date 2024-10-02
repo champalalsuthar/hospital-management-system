@@ -6,6 +6,7 @@ import { useUser } from '../../context/UserContext';
 import Loading from '../_components/Loading/Loading';
 import { IoMdEyeOff } from "react-icons/io";
 import { IoEye } from "react-icons/io5";
+import PrivateRouteAddDoctor from '@/components/customprivateroute/PrivateRouteAddDoctor';
 
 const DoctorForm = () => {
     const { user, setUser, doctorFormData, setDoctorFormData } = useUser();
@@ -314,141 +315,142 @@ const DoctorForm = () => {
     </div >;
 
     return (
-        <div className="ds py-20 px-5 text-center bg-gray-300">
-            <div>
-                <h2 className='font-bold text-4xl tracking-wide m-4 text-blue-500 underline'>{doctorFormData ? "EDIT" : "ADD"} Doctor</h2>
-            </div>
-            <div className=" w-full lg:w-4/5 bg-gray-200  mx-auto mt-8 p-6 rounded-md shadow-md">
-                {/* <h2 className="text-2xl font-bold mb-4">Book Appointment</h2> */}
-                <form onSubmit={handleSubmit}>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="mb-4">
-                            <label htmlFor="first_name" className="block text-gray-700 text-sm font-bold mb-2">
-                                First Name:
-                            </label>
-                            <input
-                                type="text"
-                                id="first_name"
-                                name="first_name"
-                                value={formData.first_name}
-                                onChange={handleChange}
-                                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                            />
-                            {formErrors.first_name && <p className="text-red-500 text-xs mt-1">{formErrors.first_name}</p>}
-
-                        </div>
-                        <div className="mb-4">
-                            <label htmlFor="last_name" className="block text-gray-700 text-sm font-bold mb-2">
-                                Last Name:
-                            </label>
-                            <input
-                                type="text"
-                                id="last_name"
-                                name="last_name"
-                                value={formData.last_name}
-                                onChange={handleChange}
-                                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                            />
-                            {formErrors.last_name && <p className="text-red-500 text-xs mt-1">{formErrors.last_name}</p>}
-
-                        </div>
-
-                        <div className="mb-4 ">
-                            <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
-                                Password:
-                            </label>
-                            <div className="flex justify-center items-center gap-1 relative ">
-
+        < PrivateRouteAddDoctor>
+            <div className="ds py-20 px-5 text-center bg-gray-300">
+                <div>
+                    <h2 className='font-bold text-4xl tracking-wide m-4 text-blue-500 underline'>{doctorFormData ? "EDIT" : "ADD"} Doctor</h2>
+                </div>
+                <div className=" w-full lg:w-4/5 bg-gray-200  mx-auto mt-8 p-6 rounded-md shadow-md">
+                    {/* <h2 className="text-2xl font-bold mb-4">Book Appointment</h2> */}
+                    <form onSubmit={handleSubmit}>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="mb-4">
+                                <label htmlFor="first_name" className="block text-gray-700 text-sm font-bold mb-2">
+                                    First Name:
+                                </label>
                                 <input
-                                    type={showPassword ? 'text' : 'password'}
-                                    id="password"
-                                    name="password"
-                                    value={formData.password}
+                                    type="text"
+                                    id="first_name"
+                                    name="first_name"
+                                    value={formData.first_name}
                                     onChange={handleChange}
-                                    className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 "
+                                    className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
                                 />
-                                <div type="button" onClick={() => setShowPassword(!showPassword)} className='text-[22px] absolute top-50% right-2'>
-                                    {showPassword ? <IoMdEyeOff /> : <IoEye />}
-                                </div>
+                                {formErrors.first_name && <p className="text-red-500 text-xs mt-1">{formErrors.first_name}</p>}
+
                             </div>
-                            {formErrors.password && <p className="text-red-500 text-xs mt-1">{formErrors.password}</p>}
+                            <div className="mb-4">
+                                <label htmlFor="last_name" className="block text-gray-700 text-sm font-bold mb-2">
+                                    Last Name:
+                                </label>
+                                <input
+                                    type="text"
+                                    id="last_name"
+                                    name="last_name"
+                                    value={formData.last_name}
+                                    onChange={handleChange}
+                                    className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+                                />
+                                {formErrors.last_name && <p className="text-red-500 text-xs mt-1">{formErrors.last_name}</p>}
 
-                        </div>
+                            </div>
 
-                        <div className="mb-4">
-                            <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
-                                Email:
-                            </label>
-                            <input
-                                type="email"
-                                id="email"
-                                name="email"
-                                value={formData.email}
-                                disabled={doctorFormData}
-                                onChange={handleChange}
-                                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                            />
-                            {formErrors.email && <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>}
+                            <div className="mb-4 ">
+                                <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
+                                    Password:
+                                </label>
+                                <div className="flex justify-center items-center gap-1 relative ">
 
-                        </div>
-                        <div className="mb-4">
-                            <label htmlFor="specialty" className="block text-gray-700 text-sm font-bold mb-2">
-                                Specialty:
-                            </label>
-                            <input
-                                type="text"
-                                id="specialty"
-                                name="specialty"
-                                value={formData.specialty}
-                                onChange={handleChange}
-                                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                            />
-                            {formErrors.specialty && <p className="text-red-500 text-xs mt-1">{formErrors.specialty}</p>}
+                                    <input
+                                        type={showPassword ? 'text' : 'password'}
+                                        id="password"
+                                        name="password"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                        className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 "
+                                    />
+                                    <div type="button" onClick={() => setShowPassword(!showPassword)} className='text-[22px] absolute top-50% right-2'>
+                                        {showPassword ? <IoMdEyeOff /> : <IoEye />}
+                                    </div>
+                                </div>
+                                {formErrors.password && <p className="text-red-500 text-xs mt-1">{formErrors.password}</p>}
 
-                        </div>
-                        <div className="mb-4">
-                            <label htmlFor="experience" className="block text-gray-700 text-sm font-bold mb-2">
-                                Experience(in years):
-                            </label>
-                            <input
-                                type="text"
-                                id="experience"
-                                name="experience"
-                                value={formData.experience}
-                                onChange={handleChange}
-                                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                            />
-                            {formErrors.experience && <p className="text-red-500 text-xs mt-1">{formErrors.experience}</p>}
+                            </div>
 
-                        </div>
+                            <div className="mb-4">
+                                <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
+                                    Email:
+                                </label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value={formData.email}
+                                    disabled={doctorFormData}
+                                    onChange={handleChange}
+                                    className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+                                />
+                                {formErrors.email && <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>}
 
-                        <div className="mb-4">
-                            <label htmlFor="department" className="block text-gray-700 text-sm font-bold mb-2">
-                                Select Department:
-                            </label>
-                            <select
-                                id="department"
-                                name="department"
-                                value={formData.department}
-                                onChange={handleChange}
-                                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                            >
-                                <option value="" disabled>
-                                    Select department
-                                </option>
-                                {department.map(dept => (
-                                    <option key={dept._id} value={dept._id}>
-                                        {dept.name}
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="specialty" className="block text-gray-700 text-sm font-bold mb-2">
+                                    Specialty:
+                                </label>
+                                <input
+                                    type="text"
+                                    id="specialty"
+                                    name="specialty"
+                                    value={formData.specialty}
+                                    onChange={handleChange}
+                                    className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+                                />
+                                {formErrors.specialty && <p className="text-red-500 text-xs mt-1">{formErrors.specialty}</p>}
+
+                            </div>
+                            <div className="mb-4">
+                                <label htmlFor="experience" className="block text-gray-700 text-sm font-bold mb-2">
+                                    Experience(in years):
+                                </label>
+                                <input
+                                    type="text"
+                                    id="experience"
+                                    name="experience"
+                                    value={formData.experience}
+                                    onChange={handleChange}
+                                    className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+                                />
+                                {formErrors.experience && <p className="text-red-500 text-xs mt-1">{formErrors.experience}</p>}
+
+                            </div>
+
+                            <div className="mb-4">
+                                <label htmlFor="department" className="block text-gray-700 text-sm font-bold mb-2">
+                                    Select Department:
+                                </label>
+                                <select
+                                    id="department"
+                                    name="department"
+                                    value={formData.department}
+                                    onChange={handleChange}
+                                    className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+                                >
+                                    <option value="" disabled>
+                                        Select department
                                     </option>
-                                ))}
-                                <option value="other" disabled>
-                                    Other
-                                </option>
-                            </select>
-                            {formErrors.department && <p className="text-red-500 text-xs mt-1">{formErrors.department}</p>}
-                        </div>
+                                    {department.map(dept => (
+                                        <option key={dept._id} value={dept._id}>
+                                            {dept.name}
+                                        </option>
+                                    ))}
+                                    <option value="other" disabled>
+                                        Other
+                                    </option>
+                                </select>
+                                {formErrors.department && <p className="text-red-500 text-xs mt-1">{formErrors.department}</p>}
+                            </div>
 
-                        {/* <div className="mb-4">
+                            {/* <div className="mb-4">
                             <label htmlFor="service" className="block text-gray-700 text-sm font-bold mb-2">
                                 Select Service:
                             </label>
@@ -474,143 +476,144 @@ const DoctorForm = () => {
                         </div> */}
 
 
-                        <div className="mb-4">
-                            <label htmlFor="popular" className="block text-gray-700 text-sm font-bold mb-2">
-                                Popular:
-                            </label>
-                            <select
-                                id="popular"
-                                name="popular"
-                                // value={formData.popular === true ? 'true' : formData.popular === false ? 'false' : ''}
-                                value={formData.popular}
-                                onChange={handleChange}
-                                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                            >
-                                <option value="" disabled>
-                                    Select popular
-                                </option>
-                                <option value="true">true</option>
-                                <option value="false">false</option>
-                            </select>
-                            {formErrors.popular && <p className="text-red-500 text-xs mt-1">{formErrors.popular}</p>}
+                            <div className="mb-4">
+                                <label htmlFor="popular" className="block text-gray-700 text-sm font-bold mb-2">
+                                    Popular:
+                                </label>
+                                <select
+                                    id="popular"
+                                    name="popular"
+                                    // value={formData.popular === true ? 'true' : formData.popular === false ? 'false' : ''}
+                                    value={formData.popular}
+                                    onChange={handleChange}
+                                    className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+                                >
+                                    <option value="" disabled>
+                                        Select popular
+                                    </option>
+                                    <option value="true">true</option>
+                                    <option value="false">false</option>
+                                </select>
+                                {formErrors.popular && <p className="text-red-500 text-xs mt-1">{formErrors.popular}</p>}
 
-                        </div>
-
-                        <div className="mb-4">
-                            <label htmlFor="phoneNumber" className="block text-gray-700 text-sm font-bold mb-2">
-                                Phone No:
-                            </label>
-                            <input
-                                type="number"
-                                id="phoneNumber"
-                                name="phoneNumber"
-                                pattern="[0-9]{10}"
-                                placeholder='PLease Enter 10 digits!  Ex. 9876543210'
-                                value={formData.phoneNumber}
-                                onChange={handleChange}
-                                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                            />
-                            {formErrors.phoneNumber && <p className="text-red-500 text-xs mt-1">{formErrors.phoneNumber}</p>}
-
-                        </div>
-
-                        <div className="mb-4">
-                            <label htmlFor="rating" className="block text-gray-700 text-sm font-bold mb-2">
-                                Rating:
-                            </label>
-                            <input
-                                type="number"
-                                id="rating"
-                                min={0}
-                                max={5}
-                                step={0.1}
-                                name="rating"
-                                value={formData.rating}
-                                onChange={handleChange}
-                                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                            />
-                            {formErrors.rating && <p className="text-red-500 text-xs mt-1">{formErrors.rating}</p>}
-
-                        </div>
-
-                        <div className="mb-4">
-                            <label htmlFor="reviews" className="block text-gray-700 text-sm font-bold mb-2">
-                                Reviews:
-                            </label>
-                            <input
-                                type="number"
-                                id="reviews"
-                                defaultValue={0}
-                                name="reviews"
-                                value={formData.reviews}
-                                onChange={handleChange}
-                                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                            />
-                            {formErrors.reviews && <p className="text-red-500 text-xs mt-1">{formErrors.reviews}</p>}
-
-                        </div>
-
-                        <div className="mb-4">
-                            <label htmlFor="isActive" className="block text-gray-700 text-sm font-bold mb-2">
-                                IsActive(Status):
-                            </label>
-                            <select
-                                id="isActive"
-                                name="isActive"
-                                value={formData.isActive}
-                                onChange={handleChange}
-                                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                            >
-                                <option value="" disabled>
-                                    Select Status
-                                </option>
-                                <option value="true">true</option>
-                                <option value="false">false</option>
-                            </select>
-                            {formErrors.isActive && <p className="text-red-500 text-xs mt-1">{formErrors.isActive}</p>}
-
-                        </div>
-                    </div>
-                    <div className="mb-4 flex flex-col lg:flex-row items-center justify-center">
-                        {/* Display either the selected image (newly chosen) or the pre-existing image */}
-                        {selectedImage ? (
-                            <div className='flex flex-col items-center justify-center'>
-                                <img
-                                    src={URL.createObjectURL(selectedImage)} // Display newly selected image
-                                    className='cursor-pointer text-white m-2 h-24 w-24 rounded-full border border-1 border-blue-400'
-                                    alt="profile"
-                                />
                             </div>
-                        ) : (
-                            doctorFormData?.imageUrl && (
+
+                            <div className="mb-4">
+                                <label htmlFor="phoneNumber" className="block text-gray-700 text-sm font-bold mb-2">
+                                    Phone No:
+                                </label>
+                                <input
+                                    type="number"
+                                    id="phoneNumber"
+                                    name="phoneNumber"
+                                    pattern="[0-9]{10}"
+                                    placeholder='PLease Enter 10 digits!  Ex. 9876543210'
+                                    value={formData.phoneNumber}
+                                    onChange={handleChange}
+                                    className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+                                />
+                                {formErrors.phoneNumber && <p className="text-red-500 text-xs mt-1">{formErrors.phoneNumber}</p>}
+
+                            </div>
+
+                            <div className="mb-4">
+                                <label htmlFor="rating" className="block text-gray-700 text-sm font-bold mb-2">
+                                    Rating:
+                                </label>
+                                <input
+                                    type="number"
+                                    id="rating"
+                                    min={0}
+                                    max={5}
+                                    step={0.1}
+                                    name="rating"
+                                    value={formData.rating}
+                                    onChange={handleChange}
+                                    className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+                                />
+                                {formErrors.rating && <p className="text-red-500 text-xs mt-1">{formErrors.rating}</p>}
+
+                            </div>
+
+                            <div className="mb-4">
+                                <label htmlFor="reviews" className="block text-gray-700 text-sm font-bold mb-2">
+                                    Reviews:
+                                </label>
+                                <input
+                                    type="number"
+                                    id="reviews"
+                                    defaultValue={0}
+                                    name="reviews"
+                                    value={formData.reviews}
+                                    onChange={handleChange}
+                                    className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+                                />
+                                {formErrors.reviews && <p className="text-red-500 text-xs mt-1">{formErrors.reviews}</p>}
+
+                            </div>
+
+                            <div className="mb-4">
+                                <label htmlFor="isActive" className="block text-gray-700 text-sm font-bold mb-2">
+                                    IsActive(Status):
+                                </label>
+                                <select
+                                    id="isActive"
+                                    name="isActive"
+                                    value={formData.isActive}
+                                    onChange={handleChange}
+                                    className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+                                >
+                                    <option value="" disabled>
+                                        Select Status
+                                    </option>
+                                    <option value="true">true</option>
+                                    <option value="false">false</option>
+                                </select>
+                                {formErrors.isActive && <p className="text-red-500 text-xs mt-1">{formErrors.isActive}</p>}
+
+                            </div>
+                        </div>
+                        <div className="mb-4 flex flex-col lg:flex-row items-center justify-center">
+                            {/* Display either the selected image (newly chosen) or the pre-existing image */}
+                            {selectedImage ? (
                                 <div className='flex flex-col items-center justify-center'>
                                     <img
-                                        src={doctorFormData.imageUrl} // Display pre-filled image if no new image selected
+                                        src={URL.createObjectURL(selectedImage)} // Display newly selected image
                                         className='cursor-pointer text-white m-2 h-24 w-24 rounded-full border border-1 border-blue-400'
                                         alt="profile"
                                     />
                                 </div>
-                            )
-                        )}
+                            ) : (
+                                doctorFormData?.imageUrl && (
+                                    <div className='flex flex-col items-center justify-center'>
+                                        <img
+                                            src={doctorFormData.imageUrl} // Display pre-filled image if no new image selected
+                                            className='cursor-pointer text-white m-2 h-24 w-24 rounded-full border border-1 border-blue-400'
+                                            alt="profile"
+                                        />
+                                    </div>
+                                )
+                            )}
 
-                        <input
-                            accept="image/*"
-                            type="file"
-                            onChange={imageChange} // Trigger the imageChange handler when selecting a new image
-                        />
-                        {formErrors.imageUrl && <p className="text-red-500 text-xs mt-1">{formErrors.imageUrl}</p>}
-                    </div>
-                    <div className="flex justify-center">
-                        <button
-                            type="submit"
-                            className="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none hover:bg-blue-600"
-                        >
-                            {doctorFormData ? "EDIT" : "ADD"}
-                        </button>
-                    </div>
-                </form>
+                            <input
+                                accept="image/*"
+                                type="file"
+                                onChange={imageChange} // Trigger the imageChange handler when selecting a new image
+                            />
+                            {formErrors.imageUrl && <p className="text-red-500 text-xs mt-1">{formErrors.imageUrl}</p>}
+                        </div>
+                        <div className="flex justify-center">
+                            <button
+                                type="submit"
+                                className="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none hover:bg-blue-600"
+                            >
+                                {doctorFormData ? "EDIT" : "ADD"}
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
+        </PrivateRouteAddDoctor>
     );
 };
 

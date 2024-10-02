@@ -13,37 +13,22 @@ import Loading from '@/app/_components/Loading/Loading';
 
 
 const page = () => {
+    const router = useRouter();
     const [doctorAppointment, setDoctorAppointment] = useState([]);
     const [doctors, setDoctors] = useState([]);
     const [delpopup, setDelPopup] = useState(false);
     const [deldoctorid, setDelDoctorId] = useState();
     const [delappid, setDelAppId] = useState();
     const [delApp, setDelApp] = useState(false);
-    const router = useRouter();
-    const [loading, setLoading] = useState(true); // Add loading state
+    // const [loading, setLoading] = useState(true); // Add loading state
+    const [loadingDoctors, setLoadingDoctors] = useState(true);
+    const [loadingAppointments, setLoadingAppointments] = useState(true);
 
     const { userLogin, setUserLogin, user, setUser, userrole, setUserRole, doctorFormData, setDoctorFormData } = useUser();
 
 
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                // Fetch data from your backend API endpoint
-                const response = await fetch('/api/appointments');
-
-                if (!response.ok) {
-                    throw new Error('Failed to fetch data');
-                }
-                const data = await response.json();
-                setDoctorAppointment(data.data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-            finally {
-                setLoading(false); // Stop loading once data is fetched or an error occurs
-            }
-        };
         const fetchData1 = async () => {
             try {
                 // Fetch data from your API endpoint
@@ -61,11 +46,30 @@ const page = () => {
                 console.error('Error fetching data:', error);
             }
             finally {
-                setLoading(false); // Stop loading once data is fetched or an error occurs
+                setLoadingDoctors(false);
+            };
+        };
+        fetchData1();
+    }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                // Fetch data from your backend API endpoint
+                const response = await fetch('/api/appointments');
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+                const data = await response.json();
+                setDoctorAppointment(data.data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+            finally {
+                setLoadingAppointments(false);
             }
         };
-        setLoading(true);
-        fetchData1();
+
         fetchData();
     }, []);
     const handleAddDoctor = () => {
@@ -74,6 +78,8 @@ const page = () => {
     };
 
     const deleteDoctor = async (doctorId) => {
+        // if (!window.confirm("Are you sure you want to delete this doctor?")) return;
+
         try {
             const response = await fetch('/api/alldoctor', {
                 method: 'DELETE',
@@ -100,6 +106,8 @@ const page = () => {
         }
     };
     const deleteAppointment = async (id) => {
+        // if (!window.confirm("Are you sure you want to delete this appointment?")) return;
+
         try {
             const response = await fetch('/api/appointments', {
                 method: 'DELETE',
@@ -134,9 +142,9 @@ const page = () => {
 
     let i = 1;
 
-    if (loading) return <div className=" bg-gray-300 ds py-20 px-5 text-center">
-        <Loading />
-    </div >;
+    // if (loading) return <div className=" bg-gray-300 ds py-20 px-5 text-center">
+    //     <Loading />
+    // </div >;
 
 
     return (
@@ -165,19 +173,21 @@ const page = () => {
 
                         <div className="overflow-x-auto text-center my-8 border border-black ">
                             <p className="text-4xl font-semibold text-red-400 underline m-5 ">All Doctors  </p>
-                            <table className="min-w-full bg-white border border-black">
-                                <thead className="text-xl">
-                                    <tr>
-                                        <th className="py-2 px-4 border border-black">SR NO.</th>
-                                        <th className="py-2 px-4 border border-black">Name</th>
-                                        <th className="py-2 px-4 border border-black">Specialty</th>
-                                        <th className="py-2 px-4 border border-black">rating</th>
-                                        <th className="py-2 px-4 border border-black">reviews</th>
-                                        <th className="py-2 px-4 border border-black">experience</th>
-                                        <th className="py-2 px-4 border border-black">Action</th>
-                                    </tr>
-                                </thead>
-                                {doctors.length > 0 ? (
+                            {loadingDoctors ? (
+                                <Loading />
+                            ) : doctors.length > 0 ? (
+                                <table className="min-w-full bg-white border border-black">
+                                    <thead className="text-xl">
+                                        <tr>
+                                            <th className="py-2 px-4 border border-black">SR NO.</th>
+                                            <th className="py-2 px-4 border border-black">Name</th>
+                                            <th className="py-2 px-4 border border-black">Specialty</th>
+                                            <th className="py-2 px-4 border border-black">rating</th>
+                                            <th className="py-2 px-4 border border-black">reviews</th>
+                                            <th className="py-2 px-4 border border-black">experience</th>
+                                            <th className="py-2 px-4 border border-black">Action</th>
+                                        </tr>
+                                    </thead>
                                     <tbody>
                                         {doctors.map((doctor, index) => (
                                             <tr key={index} className="hover:bg-gray-100">
@@ -202,37 +212,35 @@ const page = () => {
                                             </tr>
                                         ))}
                                     </tbody>
-                                ) : (
-                                    <tbody>
-                                        <tr>
-                                            <td className="text-2xl py-2 px-4 border border-black" colSpan="6">No Data Found</td>
-                                        </tr>
-                                    </tbody>
-                                )}
-                            </table>
+                                </table>
+                            ) : (
+                                <p>No doctors found</p>
+                            )}'
                         </div>
 
                         <div className="overflow-x-auto text-center my-8  border border-black">
                             <p className="text-4xl font-semibold text-red-400 underline m-5 ">Pending Patient Appointment </p>
-                            <table className="min-w-full bg-white border border-black  overflow-x-hidden ">
-                                <thead className="text-xs">
-                                    <tr>
-                                        <th className="py-2 px-4 border border-black">SR NO.</th>
-                                        <th className="py-2 px-4 border border-black">Patient Name</th>
-                                        <th className="py-2 px-4 border border-black">Father Name</th>
-                                        <th className="py-2 px-4 border border-black">Age</th>
-                                        <th className="py-2 px-4 border border-black">City</th>
-                                        <th className="py-2 px-4 border border-black">State</th>
-                                        <th className="py-2 px-4 border border-black">Mobile NO.</th>
-                                        <th className="py-2 px-4 border border-black">Gender</th>
-                                        <th className="py-2 px-4 border border-black">Problem</th>
-                                        <th className="py-2 px-4 border border-black">Doctor Name</th>
-                                        <th className="py-2 px-4 border border-black">dateTime</th>
-                                        <th className="py-2 px-4 border border-black">status</th>
-                                        <th className="py-2 px-4 border border-black">query</th>
-                                    </tr>
-                                </thead>
-                                {doctorAppointment.length > 0 ? (
+                            {loadingAppointments ? (
+                                <Loading />
+                            ) : doctorAppointment.length > 0 ? (
+                                <table className="min-w-full bg-white border border-black  overflow-x-hidden ">
+                                    <thead className="text-xs">
+                                        <tr>
+                                            <th className="py-2 px-4 border border-black">SR NO.</th>
+                                            <th className="py-2 px-4 border border-black">Patient Name</th>
+                                            <th className="py-2 px-4 border border-black">Father Name</th>
+                                            <th className="py-2 px-4 border border-black">Age</th>
+                                            <th className="py-2 px-4 border border-black">City</th>
+                                            <th className="py-2 px-4 border border-black">State</th>
+                                            <th className="py-2 px-4 border border-black">Mobile NO.</th>
+                                            <th className="py-2 px-4 border border-black">Gender</th>
+                                            <th className="py-2 px-4 border border-black">Problem</th>
+                                            <th className="py-2 px-4 border border-black">Doctor Name</th>
+                                            <th className="py-2 px-4 border border-black">dateTime</th>
+                                            <th className="py-2 px-4 border border-black">status</th>
+                                            <th className="py-2 px-4 border border-black">query</th>
+                                        </tr>
+                                    </thead>
                                     <tbody>
                                         {doctorAppointment.map((appointment, index) => (
                                             appointment.status !== 'pending' ? null : (
@@ -267,18 +275,16 @@ const page = () => {
                                             )
                                         ))}
                                     </tbody>
-                                ) : (
-                                    <tbody>
-                                        <tr>
-                                            <td className=" text-2xl py-2 px-4 border border-black" colSpan="13">No Panding Patient Appointment found</td>
-                                        </tr>
-                                    </tbody>
-                                )}
-                            </table>
+                                </table>
+                            ) : (
+                                <p>No pending appointments found</p>
+                            )}
                         </div>
                         <div className="overflow-x-auto text-center my-8  border border-black ">
                             <p className="text-4xl font-semibold text-red-400 underline m-5 ">All Patient Appointment </p>
-                            <table className="min-w-full bg-white border border-Black ">
+                            {loadingAppointments ? (
+                                <Loading />
+                            ) : doctorAppointment.length > 0 ? (<table className="min-w-full bg-white border border-Black ">
                                 <thead className="text-xs">
                                     <tr>
                                         <th className="py-2 px-4 border border-black">SR NO.</th>
@@ -296,47 +302,42 @@ const page = () => {
                                         <th className="py-2 px-4 border border-black">query</th>
                                     </tr>
                                 </thead>
-                                {doctorAppointment.length > 0 ? (
-                                    <tbody>
-                                        {doctorAppointment.map((appointment, index) => (
-                                            <tr key={index} className="hover:bg-gray-100">
-                                                <td className="py-2 px-4 border border-black">{index + 1}</td>
-                                                <td className="py-2 px-4 border border-black">{appointment.patientName}</td>
-                                                <td className="py-2 px-4 border border-black">{appointment.fatherName}</td>
-                                                <td className="py-2 px-4 border border-black">{appointment.age}</td>
-                                                <td className="py-2 px-4 border border-black">{appointment.city}</td>
-                                                <td className="py-2 px-4 border border-black">{appointment.state}</td>
-                                                <td className="py-2 px-4 border border-black">{appointment.mobile}</td>
-                                                <td className="py-2 px-4 border border-black">{appointment.gender}</td>
-                                                <td className="py-2 px-4 border border-black">{appointment.problem}</td>
-                                                <td className="py-2 px-4 border border-black">{appointment.doctor}</td>
-                                                <td className="py-2 px-4 border border-black">{appointment.dateTime}</td>
-                                                <td className="py-2 px-4 border border-black flex justify-center items-center gap-2">{appointment.status}
-                                                    <Edit className="mr-2 cursor-pointer"
-                                                        onClick={() => {
-                                                            toast.error("Server Busy........");
-                                                        }}></Edit>
-                                                    <img src='/alternate-trash.svg' alt='delete'
-                                                        className='cursor-pointer' width={15} height={15}
-                                                        onClick={() => {
-                                                            setDelAppId(appointment._id);
-                                                            setDelApp(true);
-                                                            setDelPopup(true);
-                                                        }}
-                                                    />
-                                                </td>
-                                                <td className="py-2 px-4 border border-black">{appointment.query}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                ) : (
-                                    <tbody>
-                                        <tr>
-                                            <td className=" text-2xl py-2 px-4 border border-black" colSpan="13">No Patient Appointment found</td>
+                                <tbody>
+                                    {doctorAppointment.map((appointment, index) => (
+                                        <tr key={index} className="hover:bg-gray-100">
+                                            <td className="py-2 px-4 border border-black">{index + 1}</td>
+                                            <td className="py-2 px-4 border border-black">{appointment.patientName}</td>
+                                            <td className="py-2 px-4 border border-black">{appointment.fatherName}</td>
+                                            <td className="py-2 px-4 border border-black">{appointment.age}</td>
+                                            <td className="py-2 px-4 border border-black">{appointment.city}</td>
+                                            <td className="py-2 px-4 border border-black">{appointment.state}</td>
+                                            <td className="py-2 px-4 border border-black">{appointment.mobile}</td>
+                                            <td className="py-2 px-4 border border-black">{appointment.gender}</td>
+                                            <td className="py-2 px-4 border border-black">{appointment.problem}</td>
+                                            <td className="py-2 px-4 border border-black">{appointment.doctor}</td>
+                                            <td className="py-2 px-4 border border-black">{appointment.dateTime}</td>
+                                            <td className="py-2 px-4 border border-black flex justify-center items-center gap-2">{appointment.status}
+                                                <Edit className="mr-2 cursor-pointer"
+                                                    onClick={() => {
+                                                        toast.error("Server Busy........");
+                                                    }}></Edit>
+                                                <img src='/alternate-trash.svg' alt='delete'
+                                                    className='cursor-pointer' width={15} height={15}
+                                                    onClick={() => {
+                                                        setDelAppId(appointment._id);
+                                                        setDelApp(true);
+                                                        setDelPopup(true);
+                                                    }}
+                                                />
+                                            </td>
+                                            <td className="py-2 px-4 border border-black">{appointment.query}</td>
                                         </tr>
-                                    </tbody>
-                                )}
-                            </table>
+                                    ))}
+                                </tbody>
+
+                            </table>) : (
+                                <p>No pending appointments found</p>
+                            )}
                         </div>
 
                     </div>
