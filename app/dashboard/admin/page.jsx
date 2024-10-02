@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useUser } from '../../../context/UserContext';
 import PrivateRouteDashboard from '@/components/customprivateroute/Dashboard/PrivateRouteDashboard';
+import Loading from '@/app/_components/Loading/Loading';
 
 
 
@@ -18,9 +19,10 @@ const page = () => {
     const [deldoctorid, setDelDoctorId] = useState();
     const [delappid, setDelAppId] = useState();
     const [delApp, setDelApp] = useState(false);
-    // console.log("deldoctid" + deldoctorid);
     const router = useRouter();
-    const { userLogin, setUserLogin, user, setUser, userrole, setUserRole } = useUser();
+    const [loading, setLoading] = useState(true); // Add loading state
+
+    const { userLogin, setUserLogin, user, setUser, userrole, setUserRole, doctorFormData, setDoctorFormData } = useUser();
 
 
 
@@ -33,21 +35,16 @@ const page = () => {
                 if (!response.ok) {
                     throw new Error('Failed to fetch data');
                 }
-                // Parse the JSON response
                 const data = await response.json();
-                // Set the retrieved data to the state
-                setDoctorAppointment(data.data); // Assuming your data structure has a 'data' property
+                setDoctorAppointment(data.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
+            finally {
+                setLoading(false); // Stop loading once data is fetched or an error occurs
+            }
         };
-
-        // Call the fetchData function
-        fetchData();
-    }, []);
-
-    useEffect(() => {
-        const fetchData = async () => {
+        const fetchData1 = async () => {
             try {
                 // Fetch data from your API endpoint
                 const response = await fetch('/api/alldoctor');
@@ -57,21 +54,24 @@ const page = () => {
                 }
 
                 const data = await response.json();
-
-                // Set the retrieved data to the state
-                // console.log(data);
-                // console.log(data.doctors);
-                setDoctors(data.doctors);
+                const filtereddoctor = data.doctors.filter(doc => doc.role === "doctor");
+                setDoctors(filtereddoctor);
                 // console.log(doctors);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
+            finally {
+                setLoading(false); // Stop loading once data is fetched or an error occurs
+            }
         };
-
-        // Call the fetchData function
+        setLoading(true);
+        fetchData1();
         fetchData();
     }, []);
-
+    const handleAddDoctor = () => {
+        setDoctorFormData(null); // Clear the doctor data
+        router.push('/adddoctor'); // Navigate to the add doctor page
+    };
 
     const deleteDoctor = async (doctorId) => {
         try {
@@ -88,9 +88,8 @@ const page = () => {
             if (data.success) {
                 setDelDoctorId();
                 setDelPopup(false);
+                // fetchData();
                 toast.success("Doctor account deleted");
-                // console.log("Doctor deleted successfully");
-                // Handle success, maybe update UI or show a success message
             } else {
                 console.error("Error deleting doctor:", data.error);
                 // Handle error, maybe show an error message to the user
@@ -98,7 +97,6 @@ const page = () => {
         } catch (error) {
             console.error("Error deleting doctor:", error);
             toast.error("Error deleting doctor. Please try again later.");
-            // Handle error, maybe show an error message to the user
         }
     };
     const deleteAppointment = async (id) => {
@@ -129,16 +127,23 @@ const page = () => {
             return false; // Failure
         }
     };
+    const handleEditClick = (doctor) => {
+        setDoctorFormData(doctor);
+        router.push('/adddoctor');
+    };
 
     let i = 1;
 
+    if (loading) return <div className=" bg-gray-300 ds py-20 px-5 text-center">
+        <Loading />
+    </div >;
+
+
     return (
         <PrivateRouteDashboard>
-            <div className='mt-20  bg-gray-300'>
+            <div className='pt-28 bg-gray-300'>
                 <p className={` text-center pt-10 ${delpopup ? 'hidden' : ''} `} >
-                    <Link href="/adddoctor"  >
-                        <Button>+ ADD Doctor</Button>
-                    </Link>
+                    <Button onClick={handleAddDoctor}>+ ADD Doctor</Button>
                 </p>
                 <div className=" bg-gray-300 relative">
 
@@ -157,6 +162,7 @@ const page = () => {
                                 </div>
                             </div>
                         </div>
+
                         <div className="overflow-x-auto text-center my-8 border border-black ">
                             <p className="text-4xl font-semibold text-red-400 underline m-5 ">All Doctors  </p>
                             <table className="min-w-full bg-white border border-black">
@@ -181,11 +187,9 @@ const page = () => {
                                                 <td className="py-2 px-4 border border-black">{doctor.rating}</td>
                                                 <td className="py-2 px-4 border border-black">{doctor.reviews}</td>
                                                 <td className="py-2 px-4 border border-black">{doctor.experience}</td>
-                                                <td className="py-2 px-4 border border-black flex items-center align-baseline justify-center gap-2">
-                                                    <Edit className=" cursor-pointer"
-                                                        onClick={() => {
-                                                            toast.error("Server Busy........");
-                                                        }}
+                                                <td className="py-2 px-4 border border-black flex items-center align-baseline justify-center gap-2 relative ">
+                                                    <Edit className="cursor-pointer relative z-20"
+                                                        onClick={() => handleEditClick(doctor)}
                                                     />
                                                     <img src='/alternate-trash.svg' alt='delete'
                                                         className='cursor-pointer' width={15} height={15}
@@ -201,13 +205,12 @@ const page = () => {
                                 ) : (
                                     <tbody>
                                         <tr>
-                                            <td className="text-2xl py-2 px-4 border border-black" colSpan="6">No found</td>
+                                            <td className="text-2xl py-2 px-4 border border-black" colSpan="6">No Data Found</td>
                                         </tr>
                                     </tbody>
                                 )}
                             </table>
                         </div>
-
 
                         <div className="overflow-x-auto text-center my-8  border border-black">
                             <p className="text-4xl font-semibold text-red-400 underline m-5 ">Pending Patient Appointment </p>
@@ -335,6 +338,7 @@ const page = () => {
                                 )}
                             </table>
                         </div>
+
                     </div>
 
                     <div className={` w-full h-screen flex justify-center items-center absolute inset-0   ${delpopup ? 'bg-opacity-10 ' : ''}`}
@@ -345,14 +349,7 @@ const page = () => {
                             <div className=" text-white p-16 px-8 bg-black shadow-lg border border-white absolute z-10  inset-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 text-center flex flex-col justify-center items-center rounded-lg">
                                 <p className='font-bold'>Are You Sure to Permanently Delete...</p>
                                 <div className="flex gap-5 justify-evenly mt-4">
-                                    <button className='bg-green-500 px-2 py-1 rounded-lg hover:bg-yellow-300'
-                                        onClick={() => {
-                                            setDelAppId()
-                                            setDelDoctorId()
-                                            setDelPopup(false)
-                                        }
-                                        }
-                                    >No</button>
+
                                     {
                                         delApp && <button className='bg-red-400 px-2 py-1 rounded-lg hover:bg-red-700'
                                             onClick={
@@ -367,6 +364,16 @@ const page = () => {
                                             }>Yes
                                         </button>
                                     }
+
+                                    <button className='bg-green-500 px-2 py-1 rounded-lg hover:bg-yellow-300'
+                                        onClick={() => {
+                                            setDelAppId()
+                                            setDelDoctorId()
+                                            setDelPopup(false)
+                                        }
+                                        }
+                                    >No
+                                    </button>
                                 </div>
                             </div>
                         )}

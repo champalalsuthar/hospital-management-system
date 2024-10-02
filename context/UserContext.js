@@ -6,6 +6,7 @@ const UserContext = createContext({});
 export const UserProvider = ({ children }) => {
     const [userLogin, setUserLogin] = useState(false);
     const [user, setUser] = useState({});
+    const [doctorFormData,setDoctorFormData] = useState({});
     const [userrole, setUserRole] = useState();
     const [loading, setLoading] = useState(true); // New loading state
 
@@ -53,7 +54,7 @@ export const UserProvider = ({ children }) => {
     // console.log("userLogin status data in usercontext", userLogin);
 
     return (
-        <UserContext.Provider value={{ userLogin, setUserLogin, user, setUser, userrole, setUserRole }}>
+        <UserContext.Provider value={{ userLogin, setUserLogin, user, setUser, userrole, setUserRole, doctorFormData, setDoctorFormData }}>
             {/* {!loading ? null : children} */}
             {children}
         </UserContext.Provider>

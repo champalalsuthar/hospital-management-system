@@ -24,11 +24,11 @@ const DepartmentCard = ({ department, index }) => {
       <div class="col-span-2 rounded-md">
         <h3 className="font-bold text-xl mb-2">{department.name}</h3>
         <p className="text-gray-600 mb-4">{department.description}</p>
-        <p className="text-gray-600">Contact: {department.contactNumber}</p>
-        <p className="text-gray-600">Location: {department.location}</p>
-        <p className={`font-bold ${department.status === 'active' ? 'text-green-500' : 'text-red-500'}`}>
+        <p className="text-gray-600"><span className="font-semibold">Contact:</span> {department.contactNumber}</p>
+        <p className="text-gray-600"><span className="font-semibold">Location: </span>{department.location}</p>
+        {/* <p className={`font-bold ${department.status === 'active' ? 'text-green-500' : 'text-red-500'}`}>
           {department.status}
-        </p>
+        </p> */}
       </div>
       <div class="col-span-1">
         <button

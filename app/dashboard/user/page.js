@@ -118,16 +118,16 @@ const page = () => {
                     <div className="  mx-auto text-center  bg-gray-300  mt-2">
                         <div className="relative lg:flex mx-auto w-full h-full p-5  text-center">
 
-                            <img src='/profile.jpg' alt="prfile" className="   p-5  mx-auto rounded-full" />
+                            <img src={user.imageUrl} alt="prfile" className="h-80 w-80 p-5  mx-auto rounded-full" />
                             <div className="absolute top-0 right-0  "
                                 onClick={() => {
                                     setDelPopup(true);
                                 }}>
-                                <button className="bg-red-500   text-white py-2 px-2 rounded hover:bg-yellow-600 transition duration-300 m-4 flex justify-center items-center gap-2">
+                                {/* <button className="bg-red-500   text-white py-2 px-2 rounded hover:bg-yellow-600 transition duration-300 m-4 flex justify-center items-center gap-2">
                                     <p>Account Delete</p>
                                     <img src='/alternate-trash.svg' alt='delete'
                                         className='cursor-pointer' width={15} height={15} />
-                                </button>
+                                </button> */}
                             </div>
                             <div className="">
                                 <h1 className="mt-20 ">

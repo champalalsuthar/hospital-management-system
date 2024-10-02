@@ -1,14 +1,15 @@
 "use client"
-
-"use client"
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import toast, { Toast, ToastBar, Toaster } from 'react-hot-toast';
 import { useUser } from '../../context/UserContext';
 import Loading from '../_components/Loading/Loading';
+import { IoMdEyeOff } from "react-icons/io";
+import { IoEye } from "react-icons/io5";
 
-const AppointmentForm = () => {
-    const { user, setUser } = useUser();
+const DoctorForm = () => {
+    const { user, setUser, doctorFormData, setDoctorFormData } = useUser();
+
     const [formData, setFormData] = useState({
         first_name: '',
         last_name: "",
@@ -20,25 +21,52 @@ const AppointmentForm = () => {
         reviews: '',
         phoneNumber: '',
         experience: '',
-        service: '',
-        serviceid: '',
+        service: [],
         doctor: '',
         department: '',
         popular: '',
         isActive: '',
         imageUrl: "",
-        marketing_accept: "",
-        role: '',
+        marketing_accept: true,
+        role: 'doctor',
     });
 
 
     const [formErrors, setFormErrors] = useState({});
-    // const [servicesData, setServicesData] = useState([]);
-    // const [doctors, setDoctors] = useState([]);
     const [loading, setLoading] = useState(true);
     const [department, setDepartment] = useState([]);
     const [services, setServices] = useState([]);
+    const [imageuploadUrl, setImageuploadUrl] = useState('');
+    const [selectedImage, setSelectedImage] = useState();
+    const [showPassword, setShowPassword] = useState(false);
 
+
+    useEffect(() => {
+        if (doctorFormData) {
+            setImageuploadUrl(doctorFormData.imageUrl);
+            setFormData({
+                _id: doctorFormData._id || '',
+                first_name: doctorFormData.first_name || '',
+                last_name: doctorFormData.last_name || '',
+                name: doctorFormData.name || '',
+                password: doctorFormData.password || '',
+                specialty: doctorFormData.specialty || '',
+                email: doctorFormData.email || '',
+                rating: doctorFormData.rating || '',
+                reviews: doctorFormData.reviews || '',
+                phoneNumber: doctorFormData.phoneNumber || '',
+                experience: doctorFormData.experience || '',
+                service: doctorFormData.service || [],
+                doctor: doctorFormData.doctor || '',
+                department: doctorFormData.department || '',
+                popular: doctorFormData.popular || '',
+                isActive: doctorFormData.isActive || '',
+                imageUrl: doctorFormData.imageUrl || '',
+                marketing_accept: doctorFormData.marketing_accept || true,
+                role: doctorFormData.role || 'doctor',
+            });
+        }
+    }, [doctorFormData]);
 
     const fetchActiveServices = async () => {
         try {
@@ -57,7 +85,7 @@ const AppointmentForm = () => {
             toast.error('Error loading data');
             console.error('Error fetching service data:', error);
         } finally {
-            //setloading(false);
+            setLoading(false);
         }
     };
     const fetchDepartments = async () => {
@@ -78,7 +106,7 @@ const AppointmentForm = () => {
             toast.error('Error loading data');
             console.error('Error fetching department data:', error);
         } finally {
-            //setloading(false);
+            setLoading(false);
         }
     };
 
@@ -89,41 +117,66 @@ const AppointmentForm = () => {
 
     const router = useRouter();
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-
-        setFormData((prevData) => {
-            if (name === 'service') {
-                if (value === 'other') {
-                    return {
-                        ...prevData,
-                        serviceid: '',  // Clear service ID for 'Other'
-                        service: 'Other',  // Set service to 'Other'
-                    };
-                } else {
-                    // Find selected service by ID
-                    const selectedService = services.find(service => service._id === value);
-                    return {
-                        ...prevData,
-                        serviceid: value,  // Store service ID
-                        service: selectedService?.name || '',  // Store service name
-                    };
-                }
-            } else {
-                return {
-                    ...prevData,
-                    [name]: value,
-                };
-            }
-        });
-
-        // Validate the specific field being changed
-        validateField(name, value);
+    const imageChange = (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const image = e.target.files[0];
+            setSelectedImage(image);
+            handleImageUpload(e);
+        }
     };
-    // console.log(formData.doctor);
-    // console.log(formData.department);
-    // console.log(formData.service);
-    // console.log(formData.serviceid);
+
+    const handleImageUpload = async (e) => {
+        const image = e.target.files[0]; // Get the selected image file
+        const formData = new FormData();
+        formData.append('image', image);
+
+        try {
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Error uploading image');
+            }
+            console.log("response in image uploading api", response);
+            const data = await response.json();
+            console.log("response in image uploading API", data);
+            setImageuploadUrl(data.url);
+            // setFormErrors()
+            toast.success('Image uploaded successfully');
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            toast.error('Error uploading image');
+        }
+    };
+
+    const handleChange = (e) => {
+        const { name, value, options } = e.target;
+
+        if (name === 'service') {
+            const selectedValues = Array.from(options)
+                .filter(option => option.selected)
+                .map(option => option.value);
+
+            const selectedServices = selectedValues.map(value => {
+                const [id, serviceName] = value.split(' ');  // Split the combined value
+                return { id, name: serviceName };  // Store both id and name
+            });
+
+            setFormData(prevData => ({
+                ...prevData,
+                service: selectedServices,
+            }));
+        } else {
+            setFormData(prevData => ({
+                ...prevData,
+                [name]: value,
+            }));
+        }
+
+        validateField(name, value);  // Validate field when changing
+    };
 
     const validateField = (name, value) => {
         let error = '';
@@ -144,14 +197,20 @@ const AppointmentForm = () => {
             case 'department':
                 if (!value) error = 'Department selection is required';
                 break;
-            case 'serviceid':
-                if (!value) error = 'Service selection is required';
-                break;
-            case 'popular':
-                if (!value) error = 'Popularity is required';
+            case 'service':
+                if (!value.length) error = 'Service selection is required';
                 break;
             case 'phoneNumber':
                 if (!value) error = 'Phone number is required';
+                break;
+            case 'specialty':
+                if (!value) error = 'Specialty is required';
+                break;
+            case 'popular':
+                if (!value) error = 'Popular Status is required';
+                break;
+            case 'isActive':
+                if (!value) error = 'Status is required';
                 break;
             case 'rating':
                 if (!value) error = 'Rating is required';
@@ -174,54 +233,80 @@ const AppointmentForm = () => {
         const errors = {};
 
         if (!formData.first_name) errors.first_name = 'Patient Name is required';
-        if (!formData.password) errors.password = "Father's Name is required";
+        if (!formData.password) errors.password = "Password's Name is required";
         if (!formData.email) errors.email = 'email is required';
-        if (!formData.experience) errors.experience = 'experience is required';
+        if (!formData.experience) errors.experience = 'Experience selection is required';
         if (!formData.department) errors.department = 'Department selection is required';
-        if (!formData.serviceid) errors.service = 'Service selection is required';
-        if (!formData.popular) errors.popular = 'Date and Time are required';
+        if (!formData.specialty) errors.specialty = 'Specialty is required';
+        if (!formData.popular) errors.popular = 'Popular Status is required';
+        if (!formData.isActive) errors.isActive = 'Status is required';
+        if (!formData.service) errors.service = 'Service selection is required';
         if (!formData.phoneNumber) errors.phoneNumber = 'phoneNumber number is required';
         if (!formData.rating) errors.rating = 'rating is required';
         if (!formData.reviews) errors.reviews = 'reviews is required';
+        if (!imageuploadUrl) errors.imageUrl = 'cover is required';
 
-        // If a specific field is passed, only return the error for that field
-        return field ? { [field]: errors[field] } : errors;
+        // return field ? { [field]: errors[field] } : errors;
+        setFormErrors(errors);
+        return Object.keys(errors).length === 0;
     };
 
-
+    console.log(doctorFormData);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        formData.user_id = user._id;
-        const errors = validateForm();
-        setFormErrors(errors);
-
-        if (Object.keys(errors).length > 0) {
-            return; // Stop submission if there are errors
+        const isValid = validateForm();
+        if (!isValid) {
+            return;
         }
-
-
-        try {
-            const response = await fetch('/api/appointments', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(formData),
-            });
-
-            if (!response.ok) {
-                toast.error("Failed to submit the form");
-                throw new Error('Failed to submit the form');
+        console.log(formData);
+        formData.imageUrl = imageuploadUrl;
+        formData.name = formData.first_name + " " + formData.last_name;
+        console.log(formData);
+        if (doctorFormData) {
+            try {
+                const response = await fetch(`/api/alldoctor?id=${doctorFormData._id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
+                const result = await response.json();
+                if (result.success) {
+                    toast.success('Doctor updated successfully');
+                    setDoctorFormData();
+                    router.push('/dashboard/admin');
+                } else {
+                    console.error(result.error);
+                }
+            } catch (error) {
+                console.error('Error updating doctor:', error);
             }
+        }
+        else {
+            try {
+                const response = await fetch('/api/alldoctor', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData),
+                });
 
-            // console.log('Form Data Submitted:', formData);
-            toast.success("Appointment booked successfully!");
-            // toast.success("Confirm Mail Sended!");
-            router.push('/dashboard/user');
-        } catch (error) {
-            console.error('Form Submission Error:', error.messemail);
-            toast.error("please retry!! not booked !");
+                const data = await response.json();
+                if (response.status === 201 && data.success) {
+                    toast.success('Registered Successfully');
+                    router.push('/doctors');
+                } else if (response.status === 302) {
+                    toast.error('Email already exists, please use a different email');
+                } else {
+                    toast.error(data.error || 'Something went wrong');
+                }
+            } catch (error) {
+                console.error('Form Submission Error:', error);
+                toast.error('Network or server error occurred');
+            }
         }
     };
     if (loading) return <div className=" bg-gray-300 ds py-20 px-5 text-center">
@@ -231,7 +316,7 @@ const AppointmentForm = () => {
     return (
         <div className="ds py-20 px-5 text-center bg-gray-300">
             <div>
-                <h2 className='font-bold text-4xl tracking-wide m-4 text-blue-500 underline'>Add Doctor Form</h2>
+                <h2 className='font-bold text-4xl tracking-wide m-4 text-blue-500 underline'>{doctorFormData ? "EDIT" : "ADD"} Doctor</h2>
             </div>
             <div className=" w-full lg:w-4/5 bg-gray-200  mx-auto mt-8 p-6 rounded-md shadow-md">
                 {/* <h2 className="text-2xl font-bold mb-4">Book Appointment</h2> */}
@@ -268,18 +353,24 @@ const AppointmentForm = () => {
 
                         </div>
 
-                        <div className="mb-4">
+                        <div className="mb-4 ">
                             <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
                                 Password:
                             </label>
-                            <input
-                                type="text"
-                                id="password"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
-                            />
+                            <div className="flex justify-center items-center gap-1 relative ">
+
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
+                                    id="password"
+                                    name="password"
+                                    value={formData.password}
+                                    onChange={handleChange}
+                                    className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500 "
+                                />
+                                <div type="button" onClick={() => setShowPassword(!showPassword)} className='text-[22px] absolute top-50% right-2'>
+                                    {showPassword ? <IoMdEyeOff /> : <IoEye />}
+                                </div>
+                            </div>
                             {formErrors.password && <p className="text-red-500 text-xs mt-1">{formErrors.password}</p>}
 
                         </div>
@@ -293,10 +384,26 @@ const AppointmentForm = () => {
                                 id="email"
                                 name="email"
                                 value={formData.email}
+                                disabled={doctorFormData}
                                 onChange={handleChange}
                                 className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
                             />
                             {formErrors.email && <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>}
+
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="specialty" className="block text-gray-700 text-sm font-bold mb-2">
+                                Specialty:
+                            </label>
+                            <input
+                                type="text"
+                                id="specialty"
+                                name="specialty"
+                                value={formData.specialty}
+                                onChange={handleChange}
+                                className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
+                            />
+                            {formErrors.specialty && <p className="text-red-500 text-xs mt-1">{formErrors.specialty}</p>}
 
                         </div>
                         <div className="mb-4">
@@ -316,37 +423,41 @@ const AppointmentForm = () => {
                         </div>
 
                         <div className="mb-4">
-                            <label htmlFor="doctor" className="block text-gray-700 text-sm font-bold mb-2">
+                            <label htmlFor="department" className="block text-gray-700 text-sm font-bold mb-2">
                                 Select Department:
                             </label>
                             <select
-                                id="doctor"
-                                name="doctor"
+                                id="department"
+                                name="department"
                                 value={formData.department}
                                 onChange={handleChange}
                                 className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
                             >
                                 <option value="" disabled>
-                                    Select Doctor
+                                    Select department
                                 </option>
-                                {department.map(doctor => (
-                                    <option key={doctor._id} value={doctor._id}>
-                                        {doctor.name}
+                                {department.map(dept => (
+                                    <option key={dept._id} value={dept._id}>
+                                        {dept.name}
                                     </option>
                                 ))}
+                                <option value="other" disabled>
+                                    Other
+                                </option>
                             </select>
                             {formErrors.department && <p className="text-red-500 text-xs mt-1">{formErrors.department}</p>}
                         </div>
 
-                        <div className="mb-4">
+                        {/* <div className="mb-4">
                             <label htmlFor="service" className="block text-gray-700 text-sm font-bold mb-2">
                                 Select Service:
                             </label>
                             <select
                                 id="service"
                                 name="service"
-                                value={formData.serviceid}
+                                value={formData.service}
                                 onChange={handleChange}
+                                multiple
                                 className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
                             >
                                 <option value="" disabled>
@@ -360,7 +471,7 @@ const AppointmentForm = () => {
                                 <option value="other">Other</option>
                             </select>
                             {formErrors.service && <p className="text-red-500 text-xs mt-1">{formErrors.service}</p>}
-                        </div>
+                        </div> */}
 
 
                         <div className="mb-4">
@@ -370,6 +481,7 @@ const AppointmentForm = () => {
                             <select
                                 id="popular"
                                 name="popular"
+                                // value={formData.popular === true ? 'true' : formData.popular === false ? 'false' : ''}
                                 value={formData.popular}
                                 onChange={handleChange}
                                 className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
@@ -389,9 +501,11 @@ const AppointmentForm = () => {
                                 Phone No:
                             </label>
                             <input
-                                type="tel"
+                                type="number"
                                 id="phoneNumber"
                                 name="phoneNumber"
+                                pattern="[0-9]{10}"
+                                placeholder='PLease Enter 10 digits!  Ex. 9876543210'
                                 value={formData.phoneNumber}
                                 onChange={handleChange}
                                 className="w-full border rounded-md px-3 py-2 focus:outline-none focus:border-blue-500"
@@ -409,6 +523,7 @@ const AppointmentForm = () => {
                                 id="rating"
                                 min={0}
                                 max={5}
+                                step={0.1}
                                 name="rating"
                                 value={formData.rating}
                                 onChange={handleChange}
@@ -452,14 +567,45 @@ const AppointmentForm = () => {
                                 <option value="true">true</option>
                                 <option value="false">false</option>
                             </select>
+                            {formErrors.isActive && <p className="text-red-500 text-xs mt-1">{formErrors.isActive}</p>}
+
                         </div>
+                    </div>
+                    <div className="mb-4 flex flex-col lg:flex-row items-center justify-center">
+                        {/* Display either the selected image (newly chosen) or the pre-existing image */}
+                        {selectedImage ? (
+                            <div className='flex flex-col items-center justify-center'>
+                                <img
+                                    src={URL.createObjectURL(selectedImage)} // Display newly selected image
+                                    className='cursor-pointer text-white m-2 h-24 w-24 rounded-full border border-1 border-blue-400'
+                                    alt="profile"
+                                />
+                            </div>
+                        ) : (
+                            doctorFormData?.imageUrl && (
+                                <div className='flex flex-col items-center justify-center'>
+                                    <img
+                                        src={doctorFormData.imageUrl} // Display pre-filled image if no new image selected
+                                        className='cursor-pointer text-white m-2 h-24 w-24 rounded-full border border-1 border-blue-400'
+                                        alt="profile"
+                                    />
+                                </div>
+                            )
+                        )}
+
+                        <input
+                            accept="image/*"
+                            type="file"
+                            onChange={imageChange} // Trigger the imageChange handler when selecting a new image
+                        />
+                        {formErrors.imageUrl && <p className="text-red-500 text-xs mt-1">{formErrors.imageUrl}</p>}
                     </div>
                     <div className="flex justify-center">
                         <button
                             type="submit"
                             className="bg-blue-500 text-white px-4 py-2 rounded-md focus:outline-none hover:bg-blue-600"
                         >
-                            Book Now
+                            {doctorFormData ? "EDIT" : "ADD"}
                         </button>
                     </div>
                 </form>
@@ -468,223 +614,4 @@ const AppointmentForm = () => {
     );
 };
 
-export default AppointmentForm;
-
-// "use client";
-
-// import React, { useState, useEffect } from 'react';
-// import toast from 'react-hot-toast';
-// import { useRouter } from 'next/navigation';
-
-// function DoctorForm() {
-//     const [department, setDepartment] = useState([]);
-//     const [services, setServices] = useState([]);
-
-
-//     const fetchActiveServices = async () => {
-//         try {
-//             const response = await fetch('/api/service');
-
-//             if (response.status === 200) {
-//                 const data = await response.json();
-//                 console.log(data.data);
-//                 const filteredServices = data.data.filter(service => service.isActive);
-//                 setServices(filteredServices);
-//             } else {
-//                 toast.error('Failed to load departments');
-//                 throw new Error('Failed to fetch data');
-//             }
-//         } catch (error) {
-//             toast.error('Error loading data');
-//             console.error('Error fetching service data:', error);
-//         } finally {
-//             //setloading(false);
-//         }
-//     };
-//     const fetchDepartments = async () => {
-//         try {
-//             // Fetch data from your API endpoint for departments
-//             const response = await fetch('/api/department');
-
-//             if (response.status === 200) {
-//                 const data = await response.json();
-//                 console.log(data.data);
-//                 const filteredServices = data.data.filter(dept => dept.status === "active");
-//                 setDepartment(data.data);
-//             } else {
-//                 toast.error('Failed to load departments');
-//                 throw new Error('Failed to fetch data');
-//             }
-//         } catch (error) {
-//             toast.error('Error loading data');
-//             console.error('Error fetching department data:', error);
-//         } finally {
-//             //setloading(false);
-//         }
-//     };
-
-//     useEffect(() => {
-//         fetchActiveServices();
-//         fetchDepartments();
-//     }, []);
-
-//     const [formData, setFormData] = useState({
-//         name: '',
-//         specialty: '',
-//         rating: 0,
-//         reviews: 0,
-//         services: [],
-//         department: '',
-//         email: '',
-//         experience: 0,
-//         popular: false,
-//     });
-//     const [errors, setErrors] = useState({});
-//     const [isSubmitted, setIsSubmitted] = useState(false);
-
-//     const router = useRouter();
-
-
-//     const validate = () => {
-//         const newErrors = {};
-//         if (!formData.name) newErrors.name = 'Name is required';
-//         if (!formData.specialty) newErrors.specialty = 'Specialty is required';
-//         if (formData.rating < 0 || formData.rating > 5) newErrors.rating = 'Rating must be between 0 and 5';
-//         if (formData.reviews < 0) newErrors.reviews = 'Reviews must be a positive number';
-//         if (!formData.email) newErrors.email = 'Email is required';
-//         if (!formData.services.length) newErrors.services = 'Select at least one service';
-//         if (formData.experience < 0) newErrors.experience = 'Experience must be positive';
-//         return newErrors;
-//     };
-//     const handleChange = (e) => {
-//         const { name, value } = e.target;
-//         setFormData({ ...formData, [name]: value });
-//         if (isSubmitted) {
-//             setErrors(validate());
-//         }
-
-//     };
-
-//     const handleServiceChange = (e) => {
-//         const options = e.target.options;
-//         const selectedServices = [];
-//         for (let i = 0, len = options.length; i < len; i++) {
-//             if (options[i].selected) {
-//                 selectedServices.push(options[i].value);
-//             }
-//         }
-//         setFormData({ ...formData, services: selectedServices });
-//     };
-
-//     const handleSubmit = async (e) => {
-//         e.preventDefault();
-//         setIsSubmitted(true);
-//         const validationErrors = validate();
-//         if (Object.keys(validationErrors).length > 0) {
-//             setErrors(validationErrors);
-//             return;
-//         }
-
-
-//         try {
-//             const response = await fetch('/api/alldoctor', {
-//                 method: 'POST',
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                 },
-//                 body: JSON.stringify(formData),
-//             });
-
-//             if (response.ok) {
-//                 toast.success("Doctor Data Saved");
-//                 setFormData({
-//                     name: '',
-//                     specialty: '',
-//                     rating: 0,
-//                     reviews: 0,
-//                     services: [],
-//                     department: '',
-//                     email: '',
-//                     experience: 0,
-//                     popular: false,
-//                 });
-//                 router.push('/doctors');
-//             } else if (response.status === 302) {
-//                 toast.error("Email already exists");
-//             } else {
-//                 toast.error("Failed to save Doctor Data");
-//                 throw new Error('Failed to save doctor data');
-//             }
-//         } catch (error) {
-//             console.error('Error saving doctor data:', error);
-//         }
-//     };
-
-//     return (
-//         <div className="max-w-md mx-auto p-6 bg-gray-100 shadow-md rounded-md mt-16">
-//             <h2 className="text-xl text-center mb-4 text-blue-500 underline font-bold">Add a New Doctor</h2>
-//             <form onSubmit={handleSubmit}>
-//                 <div className="mb-4">
-//                     <label className="block mb-2">Name:</label>
-//                     <input type="text" name="name" value={formData.name} onChange={handleChange}  className="w-full px-3 py-2 border rounded-md" />
-//                     {errors.name && <p className="text-red-500">{errors.name}</p>}
-//                 </div>
-//                 <div className="mb-4">
-//                     <label className="block mb-2">Email:</label>
-//                     <input type="email" name="email" value={formData.email} onChange={handleChange}  className="w-full px-3 py-2 border rounded-md" />
-//                     {errors.email && <p className="text-red-500">{errors.email}</p>}
-
-//                 </div>
-//                 <div className="mb-4">
-//                     <label className="block mb-2">Specialty:</label>
-//                     <input type="text" name="specialty" value={formData.specialty} onChange={handleChange}  className="w-full px-3 py-2 border rounded-md" />
-//                     {errors.specialty && <p className="text-red-500">{errors.specialty}</p>}
-
-//                 </div>
-//                 <div className="mb-4">
-//                     <label className="block mb-2">Rating:</label>
-//                     <input type="number" name="rating" value={formData.rating} onChange={handleChange} className="w-full px-3 py-2 border rounded-md" />
-//                     {errors.rating && <p className="text-red-500">{errors.rating}</p>}
-
-//                 </div>
-//                 <div className="mb-4">
-//                     <label className="block mb-2">Reviews:</label>
-//                     <input type="number" name="reviews" value={formData.reviews} onChange={handleChange} className="w-full px-3 py-2 border rounded-md" />
-//                     {errors.reviews && <p className="text-red-500">{errors.reviews}</p>}
-
-//                 </div>
-//                 <div className="mb-4">
-//                     <label className="block mb-2">Services:</label>
-//                     <select multiple name="services" onChange={handleServiceChange} className="w-full px-3 py-2 border rounded-md">
-//                         {services.map(service => (
-//                             <option key={service._id} value={service._id}>{service.name}</option>
-//                         ))}
-//                     </select>
-//                     {errors.services && <p className="text-red-500">{errors.services}</p>}
-
-//                 </div>
-//                 <div className="mb-4">
-//                     <label className="block mb-2">Department:</label>
-//                     <select name="department" value={formData.department} onChange={handleChange} className="w-full px-3 py-2 border rounded-md">
-//                         {department.map(dep => (
-//                             <option key={dep._id} value={dep._id}>{dep.name}</option>
-//                         ))}
-//                     </select>
-//                     {errors.department && <p className="text-red-500">{errors.department}</p>}
-
-//                 </div>
-//                 <div className="mb-4">
-//                     <label className="block mb-2">Experience (in years):</label>
-//                     <input type="number" name="experience" value={formData.experience} onChange={handleChange} className="w-full px-3 py-2 border rounded-md" />
-//                     {errors.experience && <p className="text-red-500">{errors.experience}</p>}
-
-//                 </div>
-//                 <div>
-//                     <button type="submit" className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md">Save</button>
-//                 </div>
-//             </form>
-//         </div>
-//     );
-// }
-
-// export default DoctorForm;
+export default DoctorForm;

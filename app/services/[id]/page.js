@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import Loading from '@/app/_components/Loading/Loading';
 import { useUser } from '@/context/UserContext';
 import Review from '@/app/_components/Review';
+import StarRating from '@/app/_components/StarRating';
 
 
 export default function ServiceDetailPage({ params }) {
@@ -51,6 +52,9 @@ export default function ServiceDetailPage({ params }) {
         <div className="bg-gradient-to-l from-slate-300 to-slate-100 mt-16">
             <div className=" bg-gradient-to-l from-slate-300 to-slate-100 text-slate-600  shadow-lg p-8 lg:p-16 ">
                 <h1 className="text-3xl font-bold text-light-blue-900 mb-4">{service.name}</h1>
+                <p className="text-gray-600 mb-4">
+                    <StarRating rating={3.4} />
+                    </p>
                 <h2 className="text-xl font-semibold text-gray-700 mb-2">{service.short_description}</h2>
                 <p className="text-gray-600 mb-4">{service.description}</p>
 
@@ -77,7 +81,7 @@ export default function ServiceDetailPage({ params }) {
                 </div>
 
             </div>
-            <Review type="service" id={id} LogedUserEmail={LogedUserEmail} />
+            <Review type="service" id={id} LogedUserData={user} />
         </div>
     );
 }

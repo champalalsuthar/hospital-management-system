@@ -16,9 +16,14 @@ const Page = () => {
         password_confirmation: '',
         marketing_accept: false,
         role: 'user',
+        imageUrl: '',
     });
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [imageuploadUrl, setImageuploadUrl] = useState('');
+    const [selectedImage, setSelectedImage] = useState();
+
+
     const router = useRouter();
 
     const handleChange = (e) => {
@@ -28,9 +33,50 @@ const Page = () => {
             [name]: type === 'checkbox' ? checked : value,
         }));
     };
+    const imageChange = (e) => {
+        if (e.target.files && e.target.files.length > 0) {
+            const image = e.target.files[0];
+            setSelectedImage(image);
+            handleImageUpload(e);
+        }
+    };
+
+    const handleImageUpload = async (e) => {
+        const image = e.target.files[0]; // Get the selected image file
+        const formData = new FormData();
+        formData.append('image', image);
+
+        try {
+            const response = await fetch('/api/upload', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Error uploading image');
+            }
+            console.log("response in image uploading api", response);
+            const data = await response.json();
+            console.log("response in image uploading API", data);
+            setImageuploadUrl(data.url);
+            toast.success('Image uploaded successfully');
+        } catch (error) {
+            console.error('Error uploading image:', error);
+            toast.error('Error uploading image');
+        }
+    };
+
+
+    // const removeSelectedImage = () => {
+    //     setSelectedImage(null); // Reset selected image
+    // };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        // if (!imageUrl) {
+        //     await handleImageUpload();
+        // }
         if (!formData.first_name || !formData.last_name || !formData.email || !formData.password || !formData.password_confirmation) {
             toast.error('plese fill required fields!');
             return;
@@ -54,7 +100,7 @@ const Page = () => {
                 isActive: true,
                 marketing_accept: formData.marketing_accept,
                 role: 'user',
-                imageUrl: "",
+                imageUrl: imageuploadUrl,
                 specialty: null,
                 phoneNumber: null,
                 rating: 0,
@@ -90,6 +136,7 @@ const Page = () => {
             console.error('Error sending form data:', error);
         }
     };
+
 
     return (
         <PrivateRoutelogin>
@@ -164,8 +211,27 @@ const Page = () => {
                             </div>
 
 
-                            <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-6 gap-6 ">
-                                {/* ... Your existing form fields ... */}
+                            <form onSubmit={handleSubmit} className={`mt-2 grid grid-cols-6 ${selectedImage ? 'gap-2' : 'gap-3'}`}
+                            >
+                                <div className="col-span-6 flex  flex-col lg:flex-row items-center justify-center " >
+
+                                    {selectedImage && (
+                                        <div className='flex flex-col items-center justify-center'>
+                                            <img
+                                                src={URL.createObjectURL(selectedImage)}
+                                                className='cursour-pointer text-white m-2 h-24 w-24 rounded-full border border-1 border-blue-400   '
+                                                alt="profile"
+                                            />
+                                        </div>
+                                    )}
+                                    <input
+                                        accept="image/*"
+                                        type="file"
+                                        onChange={imageChange}
+                                    />
+
+
+                                </div>
                                 <div className="col-span-6 sm:col-span-3">
                                     <label htmlFor="FirstName" className="block text-sm font-medium text-gray-700">
                                         First Name :
@@ -250,6 +316,9 @@ const Page = () => {
                                         </div>
                                     </label>
                                 </div >
+                                {/* <div className="col-span-6 ">
+                                    <input type="file" onChange={handleImageUpload}  />
+                                </div > */}
 
 
                                 <div className="col-span-6">
@@ -260,22 +329,6 @@ const Page = () => {
                                         <a href="/privacy-policy" className="text-blue-500 ml-1 underline">privacy policy</a>.
                                     </p>
                                 </div>
-                                {/* 
-                            <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
-                                <button
-                                    type="submit"
-                                    className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500"
-                                >
-                                    Create account
-                                </button>
-
-                                <p className="mt-4 text-lg text-gray-500 sm:mt-0 text-violet-900 font-semibold">
-                                    Already have account?
-                                    <a href="/login" className="text-red-700 underline  font-bold ml-2">
-                                        Log in
-                                    </a>
-                                </p>
-                            </div> */}
                                 <div className="col-span-6  w-2/3 mx-auto sm:flex sm:items-center sm:gap-4">
                                     <button
                                         type="submit"
@@ -284,7 +337,7 @@ const Page = () => {
                                         Create account
                                     </button>
 
-                                    <div className="m-4 text-[13px] text-gray-500  text-violet-900 font-semibold">
+                                    <div className="m-4 text-[14px] lg:text-[12px]  text-gray-500  text-violet-900 font-semibold">
                                         Already have account?
                                         <a href="/login" className="text-red-700 underline  font-bold mx-2">
                                             Log in
@@ -303,3 +356,4 @@ const Page = () => {
 };
 
 export default Page;
+

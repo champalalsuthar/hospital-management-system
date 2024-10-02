@@ -21,10 +21,10 @@ const ServiceCard = ({ services, index }) => {
             {/* <div class="col-span-2 text-lg font-bold capitalize rounded-md">
         {services.name}
       </div> */}
-            <div class="col-span-2 rounded-md">
+            <div class="col-span-2 rounded-md mt-4">
                 <h3 className="font-bold text-xl mb-2">{services.name}</h3>
                 <p className="text-gray-600 mb-4"> <span className='font-semibold'>Category:</span> {services.category}</p>
-                <p className="text-gray-600"><span  className='font-semibold'>Department:</span> {services.department}</p>
+                {/* <p className="text-gray-600"><span  className='font-semibold'>Department:</span> {services.department}</p> */}
                 <p className="text-gray-600"><span className='font-semibold'>Description:</span> {services.short_description}</p>
                 <p className={`font-bold ${services.isActive === 'active' ? 'text-green-500' : 'text-red-500'}`}>
                     {services.isActive}

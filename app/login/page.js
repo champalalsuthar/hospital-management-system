@@ -172,7 +172,7 @@ const Page = () => {
 
                             <form onSubmit={handleSubmit} className="mt-8 grid grid-cols-6 gap-6 ">
 
-                                <div class="col-span-6 w-2/3 mx-auto">
+                                <div class="col-span-6 lg:w-2/3 lg:mx-auto">
                                     <label htmlFor="Email" class="block text-sm font-medium text-gray-700"> Email </label>
 
                                     <input
@@ -185,7 +185,7 @@ const Page = () => {
                                     />
                                 </div>
 
-                                <div class="col-span-6 w-2/3 mx-auto ">
+                                <div class="col-span-6 lg:w-2/3 lg:mx-auto">
                                     <label htmlFor="Password" class="block text-sm font-medium text-gray-700"> Password </label>
                                     <div className="flex justify-center items-center gap-1 relative ">
                                         <input

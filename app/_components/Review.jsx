@@ -7,7 +7,7 @@ import StarRating from '@/app/_components/StarRating';
 import toast from 'react-hot-toast';
 // import { useUser } from '@/UserContext';
 
-const Review = ({ type, id, LogedUserEmail }) => {
+const Review = ({ type, id, LogedUserData }) => {
     const [filledStars, setFilledStars] = useState();
     const [loading, setLoading] = useState(true);
     const [commentData, setCommentData] = useState([]);
@@ -20,8 +20,9 @@ const Review = ({ type, id, LogedUserEmail }) => {
     // console.log(user);
     // console.log(id);
     // console.log(type);
-    // console.log(LogedUserEmail);
+    // console.log(LogedUserData);
 
+    const LogedUserEmail = LogedUserData.email;
     const fetchDoctorComments = async () => {
         if (id) {
             try {
@@ -48,7 +49,7 @@ const Review = ({ type, id, LogedUserEmail }) => {
     };
 
     useEffect(() => {
-        console.log("Type:", type, "ID:", id, "LogedUserEmail:", LogedUserEmail);
+        console.log("Type:", type, "ID:", id, "LogedUserData:", LogedUserData);
         fetchDoctorComments();
     }, [type, id]);
     useEffect(() => {
@@ -298,13 +299,13 @@ const Review = ({ type, id, LogedUserEmail }) => {
                                     </div>
 
                                     <div className="flex flex-row justify-center items-center gap-2 mt-2 lg:mt-0">
-                                        {/* Hide Button */}
-                                        {/* <button
-                                            onClick={() => handleHide(comment._id)}
-                                            className="bg-yellow-500 text-white px-4 py-1 rounded-full shadow hover:bg-yellow-600 transition-colors"
-                                        >
-                                            Hide
-                                        </button> */}
+                                        {id === LogedUserData._id &&
+                                            <button
+                                                onClick={() => handleHide(comment._id)}
+                                                className="bg-yellow-500 text-white px-4 py-1 rounded-full shadow hover:bg-yellow-600 transition-colors"
+                                            >
+                                                Hide
+                                            </button>}
 
                                         {/* Only show Edit/Delete buttons if not editing */}
                                         {comment.userEmail === LogedUserEmail && (
@@ -315,14 +316,16 @@ const Review = ({ type, id, LogedUserEmail }) => {
                                                         className="bg-blue-500 text-white px-4 py-1 rounded-full shadow hover:bg-blue-600 transition-colors"
                                                     >
                                                         Edit
-                                                    </button>}
+                                                    </button>
+                                                }
                                                 {editingCommentId === comment._id &&
                                                     <button
                                                         onClick={() => handleSaveEdit(comment._id)}
                                                         className="bg-blue-500 text-white px-4 py-1 rounded-full shadow hover:bg-blue-600 transition-colors"
                                                     >
                                                         Save
-                                                    </button>}
+                                                    </button>
+                                                }
                                                 <button
                                                     onClick={() => handleDelete(comment._id)}
                                                     className="bg-red-500 text-white px-4 py-1 rounded-full shadow hover:bg-red-600 transition-colors"

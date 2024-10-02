@@ -81,7 +81,7 @@ const DepartmentDetailPage = ({ params }) => {
                 </ul>
             </div> */}
             </div>
-            <Review type="department" id={id} LogedUserEmail={LogedUserEmail} />
+            <Review type="department" id={id} LogedUserData={user} />
         </div >
     );
 };
