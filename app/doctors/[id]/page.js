@@ -7,6 +7,8 @@ import toast from 'react-hot-toast';
 import { useUser } from "../../../context/UserContext";
 import Review from '@/app/_components/Review';
 import Image from 'next/image';
+import Link from 'next/link';
+
 
 
 export default function DoctorDetailPage({ params }) {
@@ -20,12 +22,27 @@ export default function DoctorDetailPage({ params }) {
     const [newCommentContent, setNewCommentContent] = useState("");
     const [editingCommentId, setEditingCommentId] = useState(null);
     const [departmentData, setDepartmentData] = useState(null);
+    const [servicesData, setServicesData] = useState([]);
 
     const { userLogin, setUserLogin, user, setUser, userrole, setUserRole } = useUser();
     // console.log(user.email);
 
     // console.log(id);
     const LogedUserEmail = user.email
+    const fetchServiceData = async (services) => {
+        const servicePromises = services.map(async (serviceId) => {
+            const response = await fetch(`/api/service?id=${serviceId}`);
+            if (response.ok) {
+                const data = await response.json();
+                return data.success ? data.data : null;
+            } else {
+                console.error('Failed to fetch service:', response.status);
+                return null;
+            }
+        });
+        const fetchedServices = await Promise.all(servicePromises);
+        setServicesData(fetchedServices.filter(Boolean)); // Filter out null values
+    };
 
     const fetchdeptData = async (id) => {
         if (id) {
@@ -56,6 +73,7 @@ export default function DoctorDetailPage({ params }) {
                 if (response.ok) {
                     const data = await response.json();
                     if (data.success) {
+
                         setDoctor(data.data);
                         fetchdeptData(data.data.department)
                     } else {
@@ -73,10 +91,72 @@ export default function DoctorDetailPage({ params }) {
     };
 
 
-
+    console.log("doctor data : ", doctor);
     useEffect(() => {
         fetchData();
     }, [id]);
+    // const fetchServiceData = async (services) => {
+    //     const servicePromises = services.map(async (serviceId) => {
+    //         const response = await fetch(`/api/service?id=${serviceId}`);
+    //         if (response.ok) {
+    //             const data = await response.json();
+    //             return data.success ? data.data : null;
+    //         } else {
+    //             console.error('Failed to fetch service:', response.status);
+    //             return null;
+    //         }
+    //     });
+    //     const fetchedServices = await Promise.all(servicePromises);
+    //     setServicesData(fetchedServices.filter(Boolean)); // Filter out null values
+    // };
+
+    // const fetchDepartmentData = async (departmentId) => {
+    //     if (departmentId) {
+    //         try {
+    //             const response = await fetch(`/api/department?id=${departmentId}`);
+    //             if (response.ok) {
+    //                 const data = await response.json();
+    //                 if (data.success) {
+    //                     setDepartmentData(data.data);
+    //                 } else {
+    //                     console.error('Error fetching department:', data.error);
+    //                 }
+    //             } else {
+    //                 console.error('Failed to fetch department:', response.status);
+    //             }
+    //         } catch (error) {
+    //             console.error('Error fetching department:', error);
+    //         }
+    //     }
+    // };
+
+    // const fetchDoctorData = async () => {
+    //     if (id) {
+    //         try {
+    //             const response = await fetch(`/api/alldoctor?id=${id}`);
+    //             if (response.ok) {
+    //                 const data = await response.json();
+    //                 if (data.success) {
+    //                     setDoctor(data.data);
+    //                     fetchDepartmentData(data.data.department); // Fetch department details
+    //                     fetchServiceData(data.data.services); // Fetch service details
+    //                 } else {
+    //                     console.error('Error fetching doctor:', data.error);
+    //                 }
+    //             } else {
+    //                 console.error('Failed to fetch doctor:', response.status);
+    //             }
+    //         } catch (error) {
+    //             console.error('Error fetching doctor:', error);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     }
+    // };
+
+    // useEffect(() => {
+    //     fetchDoctorData();
+    // }, [id]);
 
     if (loading) return <div className=" bg-gray-300 ds py-20 px-5 text-center">
         <Loading />
@@ -95,7 +175,8 @@ export default function DoctorDetailPage({ params }) {
                                 src={doctor.imageUrl}
                                 width={200}
                                 height={200}
-                                className=" w-full rounded-lg object-cover" // You may want to adjust this for proper sizing
+                                className=" object-cover max-w-[100%] max-h-[100%] w-full h-full rounded-lg" // You may want to adjust this for proper sizing
+                                style={{ objectFit: 'cover' }}
                             />
                         }
                     </div>
@@ -121,6 +202,37 @@ export default function DoctorDetailPage({ params }) {
                     </p>
                 </div>
 
+                {/* <div className="mt-4 mx-0 lg:mx-4 bg-light-ray-100 p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
+                    <h3 className="text-[22px] font-bold text-red-400 underline">Services:</h3>
+                    <ul className="list-disc ml-5">
+                        {servicesData.length > 0 ? (
+                            servicesData.map((service, index) => (
+                                <li key={index}>
+                                    <Link href={`/services/${service._id}`} className="text-blue-600 underline">
+                                        {service.name}
+                                    </Link>
+                                </li>
+                            ))
+                        ) : (
+                            <li>No services available</li>
+                        )}
+                    </ul>
+                </div>
+
+                <div className="mt-4 mx-0 lg:mx-4 bg-light-ray-100 p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
+                    <h3 className="text-[22px] font-bold text-red-400 underline">Department:</h3>
+                    <ul className="list-disc ml-5">
+                        {departmentData ? (
+                            <li>
+                                <Link href={`/department/${departmentData._id}`} className="text-blue-600 underline">
+                                    {departmentData.name}
+                                </Link>
+                            </li>
+                        ) : (
+                            <li>No department available</li>
+                        )}
+                    </ul>
+                </div> */}
                 <div className="mt-4 mx-0 lg:mx-4 bg-light-ray-100 p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
                     <h3 className="text-[22px] font-bold text-red-400 underline">Services:</h3>
                     <ul className="list-disc ml-5">
@@ -138,13 +250,12 @@ export default function DoctorDetailPage({ params }) {
                 <div className="mt-4 mx-0 lg:mx-4 bg-light-ray-100 p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
                     <h3 className="text-[22px] font-bold text-red-400 underline">Departments:</h3>
                     <ul className="list-disc ml-5">
-                        {/* {doctor?.department ? (<li>{doctor.department}</li>
-                        ) : (
-                            <li>No department available</li>
-                        )} */}  
+
                         {doctor?.department ? (
                             departmentData ? (
-                                <li>{departmentData.name}</li>
+                                <Link href={`/department/${departmentData._id}`} className="text-blue-600 underline">
+                                    {departmentData.name}
+                                </Link>
                             ) : (
                                 <li>{doctor.department}</li>
                             )

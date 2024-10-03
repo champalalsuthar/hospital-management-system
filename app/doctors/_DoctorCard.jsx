@@ -33,7 +33,9 @@ const DoctorCard = ({ doctor }) => {
                 src={doctor.imageUrl ? doctor.imageUrl : '/d1.jpg'}
                 width={200}
                 height={200}
-                className="h-68 w-full rounded-lg object-cover" // You may want to adjust this for proper sizing
+                className=" object-cover max-w-[100%] max-h-[50%] w-full h-full rounded-lg" // You may want to adjust this for proper sizing
+            // style={{ objectFit: 'cover' }}
+            // className="h-68 w-full rounded-lg object-cover" // You may want to adjust this for proper sizing
             />
             {/* </div> */}
             {doctor.specialty &&

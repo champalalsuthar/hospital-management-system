@@ -221,6 +221,13 @@ const Review = ({ type, id, LogedUserData }) => {
         <Loading />
     </div >;
 
+    const getSpanStyles = (criteria) => {
+        // Apply special styles if the current option is selected
+        return sortCriteria === criteria
+            ? "text-white bg-blue-600 border-blue-600"
+            : "text-blue-600 border-black hover:border-blue-600 hover:text-black";
+    };
+
     if (!commentData) return <div className=" bg-gray-300 ds py-20 px-5 text-center"><p>doctor not found</p></div>;
 
     return (
@@ -246,15 +253,64 @@ const Review = ({ type, id, LogedUserData }) => {
 
             <div className="rounded-lg p-6  w-full lg:w-3/4 flex flex-col gap-y-6 mx-auto">
                 <p className="text-2xl text-center font-bold text-blue-600 underline mb-2">{commentData.length} Reviews</p>
-                <p className="text-sm text-center font-bold text-gray-500 mb-4">
-                    Sort By:
-                    <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("latestFirst")}>Latest First</span> |
-                    <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("oldestFirst")}>Oldest First</span> |
-                    <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("mostLiked")}>Most Liked</span> |
-                    <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("mostDisliked")}>Most Disliked</span> |
-                    <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("lessLiked")}>Less Liked</span> |
-                    <span className="text-blue-600 underline cursor-pointer ml-2" onClick={() => setSortCriteria("lessDisliked")}>Less Disliked</span>
-                </p>
+                <div>
+                    <p className="text-sm text-center font-bold text-gray-500 mb-4 hidden sm:block">
+                        Sort By:
+                        <span
+                            className={`border border-1 p-2 rounded-md cursor-pointer m-2 ${getSpanStyles("latestFirst")}`}
+                            onClick={() => setSortCriteria("latestFirst")}
+                        >
+                            Latest First
+                        </span>
+                        <span
+                            className={`border border-1 p-2 rounded-md cursor-pointer m-2 ${getSpanStyles("oldestFirst")}`}
+                            onClick={() => setSortCriteria("oldestFirst")}
+                        >
+                            Oldest First
+                        </span>
+                        <span
+                            className={`border border-1 p-2 rounded-md cursor-pointer m-2 ${getSpanStyles("mostLiked")}`}
+                            onClick={() => setSortCriteria("mostLiked")}
+                        >
+                            Most Liked
+                        </span>
+                        <span
+                            className={`border border-1 p-2 rounded-md cursor-pointer m-2 ${getSpanStyles("mostDisliked")}`}
+                            onClick={() => setSortCriteria("mostDisliked")}
+                        >
+                            Most Disliked
+                        </span>
+                        <span
+                            className={`border border-1 p-2 rounded-md cursor-pointer m-2 ${getSpanStyles("lessLiked")}`}
+                            onClick={() => setSortCriteria("lessLiked")}
+                        >
+                            Less Liked
+                        </span>
+                        <span
+                            className={`border border-1 p-2 rounded-md cursor-pointer m-2 ${getSpanStyles("lessDisliked")}`}
+                            onClick={() => setSortCriteria("lessDisliked")}
+                        >
+                            Less Disliked
+                        </span>
+                    </p>
+
+                    {/* For mobile devices */}
+                    <div className="block sm:hidden text-center mb-4">
+                        <label className="text-sm font-bold text-gray-500 mr-2">Sort By:</label>
+                        <select
+                            className="p-2 border rounded-md"
+                            value={sortCriteria}
+                            onChange={(e) => setSortCriteria(e.target.value)}
+                        >
+                            <option value="latestFirst">Latest First</option>
+                            <option value="oldestFirst">Oldest First</option>
+                            <option value="mostLiked">Most Liked</option>
+                            <option value="mostDisliked">Most Disliked</option>
+                            <option value="lessLiked">Less Liked</option>
+                            <option value="lessDisliked">Less Disliked</option>
+                        </select>
+                    </div>
+                </div>
                 <ul className="divide-y divide-gray-300">
                     {sortedComments.map((comment) => (
                         <li key={comment._id} className="py-4">

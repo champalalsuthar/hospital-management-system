@@ -247,12 +247,19 @@ const AppointmentForm = () => {
 
 
         try {
+            const modifiedFormData = {
+                ...formData,
+                problem: formData.service
+            };
+            console.log(formData);
+            console.log(modifiedFormData);
             const response = await fetch('/api/appointments', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+
+                body: JSON.stringify(modifiedFormData),
             });
 
             if (!response.ok) {

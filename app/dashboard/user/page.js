@@ -167,7 +167,7 @@ const page = () => {
                                                 <td className="py-2 px-4 border border-black">{i++}</td>
                                                 <td className="py-2 px-4 border border-black">{appointment.problem}</td>
                                                 <td className="py-2 px-4 border border-black">{appointment.doctor}</td>
-                                                <td className="py-2 px-4 border border-black">{appointment.dateTime}</td>
+                                                <td className="py-2 px-4 border border-black">{new Date(appointment.dateTime).toLocaleString()}</td>
                                                 <td className="py-2 px-4 border border-black flex justify-center items-center">{appointment.status}
                                                     <Edit className="mr-2 cursor-pointer"
                                                         onClick={() => {
@@ -217,7 +217,7 @@ const page = () => {
                                                 <td className="py-2 px-4 border border-black">{j++}</td>
                                                 <td className="py-2 px-4 border border-black">{appointment.problem}</td>
                                                 <td className="py-2 px-4 border border-black">{appointment.doctor}</td>
-                                                <td className="py-2 px-4 border border-black">{appointment.dateTime}</td>
+                                                <td className="py-2 px-4 border border-black">{new Date(appointment.dateTime).toLocaleString()}</td>
                                                 <td className="py-2 px-4 border border-black">{appointment.status}</td>
                                                 <td className="py-2 px-4 border border-black">{appointment.query}</td>
                                             </tr>

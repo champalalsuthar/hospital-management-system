@@ -136,6 +136,7 @@ const page = () => {
                             <thead className="text-xl">
                                 <tr>
                                     <th className="py-2 px-4 border border-black">SR NO.</th>
+                                    <th className="py-2 px-4 border border-black">Patient Name</th>
                                     <th className="py-2 px-4 border border-black">Problem</th>
                                     <th className="py-2 px-4 border border-black">dateTime</th>
                                     <th className="py-2 px-4 border border-black">status</th>
@@ -148,8 +149,10 @@ const page = () => {
                                         appointment.doctorid === user._id && appointment.status === 'pending' ? (
                                             <tr key={index} className="hover:bg-gray-100">
                                                 <td className="py-2 px-4 border border-black">{i++}</td>
+                                                <td className="py-2 px-4 border border-black">{appointment.patientName}</td>
                                                 <td className="py-2 px-4 border border-black">{appointment.problem}</td>
-                                                <td className="py-2 px-4 border border-black">{appointment.dateTime}</td>
+                                                <td className="py-2 px-4 border border-black">{new Date(appointment.dateTime).toLocaleString()}
+                                                </td>
                                                 <td className="py-2 px-4 border border-black flex justify-center items-center">{appointment.status}
                                                     <Edit className="mr-2 cursor-pointer"
                                                         onClick={() => {
@@ -176,6 +179,7 @@ const page = () => {
                             <thead className="text-xl">
                                 <tr>
                                     <th className="py-2 px-4 border border-black">SR NO.</th>
+                                    <th className="py-2 px-4 border border-black">Patient Name</th>
                                     <th className="py-2 px-4 border border-black">Problem</th>
                                     <th className="py-2 px-4 border border-black">dateTime</th>
                                     <th className="py-2 px-4 border border-black">status</th>
@@ -188,8 +192,9 @@ const page = () => {
                                         appointment.doctorid === user._id && appointment.status !== 'pending' ? (
                                             <tr key={index} className="hover:bg-gray-100">
                                                 <td className="py-2 px-4 border border-black">{j++}</td>
+                                                <td className="py-2 px-4 border border-black">{appointment.patientName}</td>
                                                 <td className="py-2 px-4 border border-black">{appointment.problem}</td>
-                                                <td className="py-2 px-4 border border-black">{appointment.dateTime}</td>
+                                                <td className="py-2 px-4 border border-black">{new Date(appointment.dateTime).toLocaleString()}</td>
                                                 <td className="py-2 px-4 border border-black">{appointment.status}</td>
                                                 <td className="py-2 px-4 border border-black">{appointment.query}</td>
                                             </tr>

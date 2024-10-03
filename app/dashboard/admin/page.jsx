@@ -94,7 +94,7 @@ const page = () => {
             if (data.success) {
                 setDelDoctorId();
                 setDelPopup(false);
-                // fetchData();
+                // fetchData1();
                 toast.success("Doctor account deleted");
             } else {
                 console.error("Error deleting doctor:", data.error);
@@ -123,6 +123,7 @@ const page = () => {
                 setDelAppId();
                 setDelApp(false);
                 setDelPopup(false);
+                // fetchData()
                 toast.success("Appointment deleted.....");
                 return true; // Success
             } else {
@@ -255,7 +256,7 @@ const page = () => {
                                                     <td className="py-2 px-4 border border-black">{appointment.gender}</td>
                                                     <td className="py-2 px-4 border border-black">{appointment.problem}</td>
                                                     <td className="py-2 px-4 border border-black">{appointment.doctor}</td>
-                                                    <td className="py-2 px-4 border border-black">{appointment.dateTime}</td>
+                                                    <td className="py-2 px-4 border border-black">{new Date(appointment.dateTime).toLocaleString()}</td>
                                                     <td className="py-2 px-4 border border-black flex justify-center items-center gap-2">{appointment.status}  <Edit className="mr-2 cursor-pointer"
                                                         onClick={() => {
                                                             toast.error("Server Busy........");
@@ -315,7 +316,7 @@ const page = () => {
                                             <td className="py-2 px-4 border border-black">{appointment.gender}</td>
                                             <td className="py-2 px-4 border border-black">{appointment.problem}</td>
                                             <td className="py-2 px-4 border border-black">{appointment.doctor}</td>
-                                            <td className="py-2 px-4 border border-black">{appointment.dateTime}</td>
+                                            <td className="py-2 px-4 border border-black">{new Date(appointment.dateTime).toLocaleString()}</td>
                                             <td className="py-2 px-4 border border-black flex justify-center items-center gap-2">{appointment.status}
                                                 <Edit className="mr-2 cursor-pointer"
                                                     onClick={() => {
