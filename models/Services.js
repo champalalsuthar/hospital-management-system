@@ -17,12 +17,7 @@ const serviceSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    category: {
-        type: String,
-        required: true,
-        enum: ['Lab Test', 'Surgery', 'Consultation', 'Emergency', 'Therapy', 'Other'], // categories of services
-        default: 'Other'
-    },
+    
     price: {
         type: Number,
         required: true,
@@ -37,6 +32,12 @@ const serviceSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Department',  // Reference to a hospital department
         required: true
+    },
+    category: {
+        type: String,
+        required: true,
+        enum: ['Lab Test', 'Surgery', 'Consultation', 'Emergency', 'Therapy', 'Other'], // categories of services
+        default: 'Other'
     },
     availableSlots: [{
         dayOfWeek: {

@@ -16,12 +16,16 @@ const page = () => {
     const router = useRouter();
     const [doctorAppointment, setDoctorAppointment] = useState([]);
     const [doctors, setDoctors] = useState([]);
+    const [services, setServices] = useState([]);
     const [delpopup, setDelPopup] = useState(false);
     const [deldoctorid, setDelDoctorId] = useState();
+    const [delServiceId, setDelServiceId] = useState();
     const [delappid, setDelAppId] = useState();
     const [delApp, setDelApp] = useState(false);
+    const [delService, setDelService] = useState(false);
     // const [loading, setLoading] = useState(true); // Add loading state
     const [loadingDoctors, setLoadingDoctors] = useState(true);
+    const [loadingServices, setLoadingServices] = useState(true);
     const [loadingAppointments, setLoadingAppointments] = useState(true);
 
     const { userLogin, setUserLogin, user, setUser, userrole, setUserRole, doctorFormData, setDoctorFormData } = useUser();
@@ -52,6 +56,31 @@ const page = () => {
         fetchData1();
     }, []);
     useEffect(() => {
+        const fetchData2 = async () => {
+            try {
+                // Fetch data from your API endpoint
+                const response = await fetch('/api/service');
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data');
+                }
+
+                const data = await response.json();
+                console.log(data);
+                console.log(data.data);
+                // const filtereddoctor = data.doctors.filter(doc => doc.role === "doctor");
+                setServices(data.data);
+                // console.log(doctors);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+            finally {
+                setLoadingServices(false);
+            };
+        };
+        fetchData2();
+    }, []);
+    useEffect(() => {
         const fetchData = async () => {
             try {
                 // Fetch data from your backend API endpoint
@@ -75,6 +104,10 @@ const page = () => {
     const handleAddDoctor = () => {
         setDoctorFormData(null); // Clear the doctor data
         router.push('/adddoctor'); // Navigate to the add doctor page
+    };
+    const handleAddServices = () => {
+        setDoctorFormData(null); // Clear the doctor data
+        router.push('/addservices'); // Navigate to the add doctor page
     };
 
     const deleteDoctor = async (doctorId) => {
@@ -103,6 +136,35 @@ const page = () => {
         } catch (error) {
             console.error("Error deleting doctor:", error);
             toast.error("Error deleting doctor. Please try again later.");
+        }
+    };
+    const deleteServices = async (Id) => {
+        // if (!window.confirm("Are you sure you want to delete this doctor?")) return;
+        console.log("id in deleter services", Id);
+        try {
+            const response = await fetch('/api/service', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id: Id })
+            });
+            const data = await response.json();
+            console.log(response)
+            console.log(data)
+
+            if (data.success) {
+                setDelServiceId();
+                setDelPopup(false);
+                // fetchData1();
+                toast.success("Service deleted");
+            } else {
+                console.error("Error deleting service:", data.error);
+                // Handle error, maybe show an error message to the user
+            }
+        } catch (error) {
+            console.error("Error deleting service:", error);
+            toast.error("Error deleting service. Please try again later.");
         }
     };
     const deleteAppointment = async (id) => {
@@ -140,6 +202,10 @@ const page = () => {
         setDoctorFormData(doctor);
         router.push('/adddoctor');
     };
+    const handleEditServices = (doctor) => {
+        setDoctorFormData(doctor);
+        router.push('/addservices');
+    };
 
     let i = 1;
 
@@ -149,143 +215,142 @@ const page = () => {
 
 
     return (
-        <PrivateRouteDashboard>
-            <div className='pt-28 bg-gray-300'>
+        // <PrivateRouteDashboard>
+        <div className='pt-28 bg-gray-300'>
+            <div className="flex justify-center items-center gap-6 ">
                 <p className={` text-center pt-10 ${delpopup ? 'hidden' : ''} `} >
                     <Button onClick={handleAddDoctor}>+ ADD Doctor</Button>
                 </p>
-                <div className=" bg-gray-300 relative">
 
-                    <div className={` h-full w-full  ${delpopup ? 'hidden' : ''} `}>
-                        <div className="  mx-auto text-center  min-h-10 bg-gray-300  ">
-                            <div className="mx-auto h-50  p-5  text-center">
-                                <div className="">
-                                    <h1 className="mx-auto text-2xl text-sky-600 ">
+                <p className={` text-center pt-10 ${delpopup ? 'hidden' : ''} `} >
+                    <Button onClick={handleAddServices}>+ ADD Services</Button>
+                </p>
+            </div>
+            <div className=" bg-gray-300 relative">
 
-                                        <span className="font-bold text-black text-3xl  underline">Welcome!
-                                            <span className='text-red-500'>Admin 👋</span>
-                                        </span>
-                                        <p>{user.first_name} {user.last_name}!</p>
+                <div className={` h-full w-full  ${delpopup ? 'hidden' : ''} `}>
+                    <div className="  mx-auto text-center  min-h-10 bg-gray-300  ">
+                        <div className="mx-auto h-50  p-5  text-center">
+                            <div className="">
+                                <h1 className="mx-auto text-2xl text-sky-600 ">
 
-                                    </h1>
-                                </div>
+                                    <span className="font-bold text-black text-3xl  underline">Welcome!
+                                        <span className='text-red-500'>Admin 👋</span>
+                                    </span>
+                                    <p>{user.first_name} {user.last_name}!</p>
+
+                                </h1>
                             </div>
                         </div>
+                    </div>
 
-                        <div className="overflow-x-auto text-center my-8 border border-black ">
-                            <p className="text-4xl font-semibold text-red-400 underline m-5 ">All Doctors  </p>
-                            {loadingDoctors ? (
-                                <Loading />
-                            ) : doctors.length > 0 ? (
-                                <table className="min-w-full bg-white border border-black">
-                                    <thead className="text-xl">
-                                        <tr>
-                                            <th className="py-2 px-4 border border-black">SR NO.</th>
-                                            <th className="py-2 px-4 border border-black">Name</th>
-                                            <th className="py-2 px-4 border border-black">Specialty</th>
-                                            <th className="py-2 px-4 border border-black">rating</th>
-                                            <th className="py-2 px-4 border border-black">reviews</th>
-                                            <th className="py-2 px-4 border border-black">experience</th>
-                                            <th className="py-2 px-4 border border-black">Action</th>
+                    <div className="overflow-x-auto text-center my-8 border border-black ">
+                        <p className="text-4xl font-semibold text-red-400 underline m-5 ">All Doctors  </p>
+                        {loadingDoctors ? (
+                            <Loading />
+                        ) : doctors.length > 0 ? (
+                            <table className="min-w-full bg-white border border-black">
+                                <thead className="text-xl">
+                                    <tr>
+                                        <th className="py-2 px-4 border border-black">SR NO.</th>
+                                        <th className="py-2 px-4 border border-black">Name</th>
+                                        <th className="py-2 px-4 border border-black">Specialty</th>
+                                        <th className="py-2 px-4 border border-black">rating</th>
+                                        <th className="py-2 px-4 border border-black">reviews</th>
+                                        <th className="py-2 px-4 border border-black">experience</th>
+                                        <th className="py-2 px-4 border border-black">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {doctors.map((doctor, index) => (
+                                        <tr key={index} className="hover:bg-gray-100">
+                                            <td className="py-2 px-4 border border-black">{index + 1}</td>
+                                            <td className="py-2 px-4 border border-black">{doctor.name}</td>
+                                            <td className="py-2 px-4 border border-black">{doctor.specialty}</td>
+                                            <td className="py-2 px-4 border border-black">{doctor.rating}</td>
+                                            <td className="py-2 px-4 border border-black">{doctor.reviews}</td>
+                                            <td className="py-2 px-4 border border-black">{doctor.experience}</td>
+                                            <td className="py-2 px-4 border border-black flex items-center align-baseline justify-center gap-2 relative ">
+                                                <Edit className="cursor-pointer relative z-20"
+                                                    onClick={() => handleEditClick(doctor)}
+                                                />
+                                                <img src='/alternate-trash.svg' alt='delete'
+                                                    className='cursor-pointer' width={15} height={15}
+                                                    onClick={() => {
+                                                        setDelDoctorId(doctor._id);
+                                                        setDelService(false);
+                                                        setDelPopup(true);
+                                                    }}
+                                                />
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        {doctors.map((doctor, index) => (
-                                            <tr key={index} className="hover:bg-gray-100">
-                                                <td className="py-2 px-4 border border-black">{index + 1}</td>
-                                                <td className="py-2 px-4 border border-black">{doctor.name}</td>
-                                                <td className="py-2 px-4 border border-black">{doctor.specialty}</td>
-                                                <td className="py-2 px-4 border border-black">{doctor.rating}</td>
-                                                <td className="py-2 px-4 border border-black">{doctor.reviews}</td>
-                                                <td className="py-2 px-4 border border-black">{doctor.experience}</td>
-                                                <td className="py-2 px-4 border border-black flex items-center align-baseline justify-center gap-2 relative ">
-                                                    <Edit className="cursor-pointer relative z-20"
-                                                        onClick={() => handleEditClick(doctor)}
-                                                    />
-                                                    <img src='/alternate-trash.svg' alt='delete'
-                                                        className='cursor-pointer' width={15} height={15}
-                                                        onClick={() => {
-                                                            setDelDoctorId(doctor._id);
-                                                            setDelPopup(true);
-                                                        }}
-                                                    />
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            ) : (
-                                <p>No doctors found</p>
-                            )}'
-                        </div>
+                                    ))}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <p>No doctors found</p>
+                        )}'
+                    </div>
 
-                        <div className="overflow-x-auto text-center my-8  border border-black">
-                            <p className="text-4xl font-semibold text-red-400 underline m-5 ">Pending Patient Appointment </p>
-                            {loadingAppointments ? (
-                                <Loading />
-                            ) : doctorAppointment.length > 0 ? (
-                                <table className="min-w-full bg-white border border-black  overflow-x-hidden ">
-                                    <thead className="text-xs">
-                                        <tr>
-                                            <th className="py-2 px-4 border border-black">SR NO.</th>
-                                            <th className="py-2 px-4 border border-black">Patient Name</th>
-                                            <th className="py-2 px-4 border border-black">Father Name</th>
-                                            <th className="py-2 px-4 border border-black">Age</th>
-                                            <th className="py-2 px-4 border border-black">City</th>
-                                            <th className="py-2 px-4 border border-black">State</th>
-                                            <th className="py-2 px-4 border border-black">Mobile NO.</th>
-                                            <th className="py-2 px-4 border border-black">Gender</th>
-                                            <th className="py-2 px-4 border border-black">Problem</th>
-                                            <th className="py-2 px-4 border border-black">Doctor Name</th>
-                                            <th className="py-2 px-4 border border-black">dateTime</th>
-                                            <th className="py-2 px-4 border border-black">status</th>
-                                            <th className="py-2 px-4 border border-black">query</th>
+                    <div className="overflow-x-auto text-center my-8 border border-black ">
+                        <p className="text-4xl font-semibold text-red-400 underline m-5 ">All Services  </p>
+                        {loadingServices ? (
+                            <Loading />
+                        ) : services.length > 0 ? (
+                            <table className="min-w-full bg-white border border-black">
+                                <thead className="text-xl">
+                                    <tr>
+                                        <th className="py-2 px-4 border border-black">SR NO.</th>
+                                        <th className="py-2 px-4 border border-black">Name</th>
+                                        <th className="py-2 px-4 border border-black">short_description</th>
+                                        <th className="py-2 px-4 border border-black">price</th>
+                                        <th className="py-2 px-4 border border-black">duration</th>
+                                        {/* <th className="py-2 px-4 border border-black">department</th> */}
+                                        <th className="py-2 px-4 border border-black">isActive</th>
+                                        <th className="py-2 px-4 border border-black">isTopActive</th>
+                                        <th className="py-2 px-4 border border-black">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {services.map((service, index) => (
+                                        <tr key={index} className="hover:bg-gray-100">
+                                            <td className="py-2 px-4 border border-black">{index + 1}</td>
+                                            <td className="py-2 px-4 border border-black">{service.name}</td>
+                                            <td className="py-2 px-4 border border-black">{service.short_description}</td>
+                                            <td className="py-2 px-4 border border-black">{service.price}</td>
+                                            <td className="py-2 px-4 border border-black">{service.duration}</td>
+                                            {/* <td className="py-2 px-4 border border-black">{service.department}</td> */}
+                                            <td className="py-2 px-4 border border-black">{service.isActive ? "true" : "false"}</td>
+                                            <td className="py-2 px-4 border border-black">{service.isTopActive ? "true" : "false"}</td>
+                                            <td className="py-2 px-4 border border-black flex items-center align-baseline justify-center gap-2 relative ">
+                                                <Edit className="cursor-pointer relative z-20"
+                                                    onClick={() => handleEditServices(service)}
+                                                />
+                                                <img src='/alternate-trash.svg' alt='delete'
+                                                    className='cursor-pointer' width={15} height={15}
+                                                    onClick={() => {
+                                                        setDelServiceId(service._id);
+                                                        setDelService(true);
+                                                        setDelApp(false);
+                                                        setDelPopup(true);
+                                                    }}
+                                                />
+                                            </td>
                                         </tr>
-                                    </thead>
-                                    <tbody>
-                                        {doctorAppointment.map((appointment, index) => (
-                                            appointment.status !== 'pending' ? null : (
-                                                <tr key={index} className="hover:bg-gray-100">
-                                                    <td className="py-2 px-4 border border-black">{i++}</td>
-                                                    <td className="py-2 px-4 border border-black">{appointment.patientName}</td>
-                                                    <td className="py-2 px-4 border border-black">{appointment.fatherName}</td>
-                                                    <td className="py-2 px-4 border border-black">{appointment.age}</td>
-                                                    <td className="py-2 px-4 border border-black">{appointment.city}</td>
-                                                    <td className="py-2 px-4 border border-black">{appointment.state}</td>
-                                                    <td className="py-2 px-4 border border-black">{appointment.mobile}</td>
-                                                    <td className="py-2 px-4 border border-black">{appointment.gender}</td>
-                                                    <td className="py-2 px-4 border border-black">{appointment.problem}</td>
-                                                    <td className="py-2 px-4 border border-black">{appointment.doctor}</td>
-                                                    <td className="py-2 px-4 border border-black">{new Date(appointment.dateTime).toLocaleString()}</td>
-                                                    <td className="py-2 px-4 border border-black flex justify-center items-center gap-2">{appointment.status}  <Edit className="mr-2 cursor-pointer"
-                                                        onClick={() => {
-                                                            toast.error("Server Busy........");
-                                                        }}
-                                                    />
-                                                        <img src='/alternate-trash.svg' alt='delete'
-                                                            className='cursor-pointer' width={15} height={15}
-                                                            onClick={() => {
-                                                                setDelAppId(appointment._id);
-                                                                setDelApp(true);
-                                                                setDelPopup(true);
-                                                            }}
-                                                        />
-                                                    </td>
-                                                    <td className="py-2 px-4 border border-black">{appointment.query}</td>
-                                                </tr>
-                                            )
-                                        ))}
-                                    </tbody>
-                                </table>
-                            ) : (
-                                <p>No pending appointments found</p>
-                            )}
-                        </div>
-                        <div className="overflow-x-auto text-center my-8  border border-black ">
-                            <p className="text-4xl font-semibold text-red-400 underline m-5 ">All Patient Appointment </p>
-                            {loadingAppointments ? (
-                                <Loading />
-                            ) : doctorAppointment.length > 0 ? (<table className="min-w-full bg-white border border-Black ">
+                                    ))}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <p>No Services found</p>
+                        )}'
+                    </div>
+
+                    <div className="overflow-x-auto text-center my-8  border border-black">
+                        <p className="text-4xl font-semibold text-red-400 underline m-5 ">Pending Patient Appointment </p>
+                        {loadingAppointments ? (
+                            <Loading />
+                        ) : doctorAppointment.length > 0 ? (
+                            <table className="min-w-full bg-white border border-black  overflow-x-hidden ">
                                 <thead className="text-xs">
                                     <tr>
                                         <th className="py-2 px-4 border border-black">SR NO.</th>
@@ -305,84 +370,155 @@ const page = () => {
                                 </thead>
                                 <tbody>
                                     {doctorAppointment.map((appointment, index) => (
-                                        <tr key={index} className="hover:bg-gray-100">
-                                            <td className="py-2 px-4 border border-black">{index + 1}</td>
-                                            <td className="py-2 px-4 border border-black">{appointment.patientName}</td>
-                                            <td className="py-2 px-4 border border-black">{appointment.fatherName}</td>
-                                            <td className="py-2 px-4 border border-black">{appointment.age}</td>
-                                            <td className="py-2 px-4 border border-black">{appointment.city}</td>
-                                            <td className="py-2 px-4 border border-black">{appointment.state}</td>
-                                            <td className="py-2 px-4 border border-black">{appointment.mobile}</td>
-                                            <td className="py-2 px-4 border border-black">{appointment.gender}</td>
-                                            <td className="py-2 px-4 border border-black">{appointment.problem}</td>
-                                            <td className="py-2 px-4 border border-black">{appointment.doctor}</td>
-                                            <td className="py-2 px-4 border border-black">{new Date(appointment.dateTime).toLocaleString()}</td>
-                                            <td className="py-2 px-4 border border-black flex justify-center items-center gap-2">{appointment.status}
-                                                <Edit className="mr-2 cursor-pointer"
+                                        appointment.status !== 'pending' ? null : (
+                                            <tr key={index} className="hover:bg-gray-100">
+                                                <td className="py-2 px-4 border border-black">{i++}</td>
+                                                <td className="py-2 px-4 border border-black">{appointment.patientName}</td>
+                                                <td className="py-2 px-4 border border-black">{appointment.fatherName}</td>
+                                                <td className="py-2 px-4 border border-black">{appointment.age}</td>
+                                                <td className="py-2 px-4 border border-black">{appointment.city}</td>
+                                                <td className="py-2 px-4 border border-black">{appointment.state}</td>
+                                                <td className="py-2 px-4 border border-black">{appointment.mobile}</td>
+                                                <td className="py-2 px-4 border border-black">{appointment.gender}</td>
+                                                <td className="py-2 px-4 border border-black">{appointment.problem}</td>
+                                                <td className="py-2 px-4 border border-black">{appointment.doctor}</td>
+                                                <td className="py-2 px-4 border border-black">{new Date(appointment.dateTime).toLocaleString()}</td>
+                                                <td className="py-2 px-4 border border-black flex justify-center items-center gap-2">{appointment.status}  <Edit className="mr-2 cursor-pointer"
                                                     onClick={() => {
                                                         toast.error("Server Busy........");
-                                                    }}></Edit>
-                                                <img src='/alternate-trash.svg' alt='delete'
-                                                    className='cursor-pointer' width={15} height={15}
-                                                    onClick={() => {
-                                                        setDelAppId(appointment._id);
-                                                        setDelApp(true);
-                                                        setDelPopup(true);
                                                     }}
                                                 />
-                                            </td>
-                                            <td className="py-2 px-4 border border-black">{appointment.query}</td>
-                                        </tr>
+                                                    <img src='/alternate-trash.svg' alt='delete'
+                                                        className='cursor-pointer' width={15} height={15}
+                                                        onClick={() => {
+                                                            setDelAppId(appointment._id);
+                                                            setDelApp(true);
+                                                            setDelService(false)
+                                                            setDelPopup(true);
+                                                        }}
+                                                    />
+                                                </td>
+                                                <td className="py-2 px-4 border border-black">{appointment.query}</td>
+                                            </tr>
+                                        )
                                     ))}
                                 </tbody>
-
-                            </table>) : (
-                                <p>No pending appointments found</p>
-                            )}
-                        </div>
-
-                    </div>
-
-                    <div className={` w-full h-screen flex justify-center items-center absolute inset-0   ${delpopup ? 'bg-opacity-10 ' : ''}`}
-                    // onClick={() => setDelPopup(false)}
-                    >
-                        {/* Popup */}
-                        {delpopup && (
-                            <div className=" text-white p-16 px-8 bg-black shadow-lg border border-white absolute z-10  inset-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 text-center flex flex-col justify-center items-center rounded-lg">
-                                <p className='font-bold'>Are You Sure to Permanently Delete...</p>
-                                <div className="flex gap-5 justify-evenly mt-4">
-
-                                    {
-                                        delApp && <button className='bg-red-400 px-2 py-1 rounded-lg hover:bg-red-700'
-                                            onClick={
-                                                () => deleteAppointment(delappid)
-                                            }>Yes
-                                        </button>
-                                    }
-                                    {
-                                        !delApp && <button className='bg-red-400 px-2 py-1 rounded-lg hover:bg-red-700'
-                                            onClick={
-                                                () => deleteDoctor(deldoctorid)
-                                            }>Yes
-                                        </button>
-                                    }
-
-                                    <button className='bg-green-500 px-2 py-1 rounded-lg hover:bg-yellow-300'
-                                        onClick={() => {
-                                            setDelAppId()
-                                            setDelDoctorId()
-                                            setDelPopup(false)
-                                        }
-                                        }
-                                    >No
-                                    </button>
-                                </div>
-                            </div>
+                            </table>
+                        ) : (
+                            <p>No pending appointments found</p>
                         )}
                     </div>
-                </div >
+                    <div className="overflow-x-auto text-center my-8  border border-black ">
+                        <p className="text-4xl font-semibold text-red-400 underline m-5 ">All Patient Appointment </p>
+                        {loadingAppointments ? (
+                            <Loading />
+                        ) : doctorAppointment.length > 0 ? (<table className="min-w-full bg-white border border-Black ">
+                            <thead className="text-xs">
+                                <tr>
+                                    <th className="py-2 px-4 border border-black">SR NO.</th>
+                                    <th className="py-2 px-4 border border-black">Patient Name</th>
+                                    <th className="py-2 px-4 border border-black">Father Name</th>
+                                    <th className="py-2 px-4 border border-black">Age</th>
+                                    <th className="py-2 px-4 border border-black">City</th>
+                                    <th className="py-2 px-4 border border-black">State</th>
+                                    <th className="py-2 px-4 border border-black">Mobile NO.</th>
+                                    <th className="py-2 px-4 border border-black">Gender</th>
+                                    <th className="py-2 px-4 border border-black">Problem</th>
+                                    <th className="py-2 px-4 border border-black">Doctor Name</th>
+                                    <th className="py-2 px-4 border border-black">dateTime</th>
+                                    <th className="py-2 px-4 border border-black">status</th>
+                                    <th className="py-2 px-4 border border-black">query</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {doctorAppointment.map((appointment, index) => (
+                                    <tr key={index} className="hover:bg-gray-100">
+                                        <td className="py-2 px-4 border border-black">{index + 1}</td>
+                                        <td className="py-2 px-4 border border-black">{appointment.patientName}</td>
+                                        <td className="py-2 px-4 border border-black">{appointment.fatherName}</td>
+                                        <td className="py-2 px-4 border border-black">{appointment.age}</td>
+                                        <td className="py-2 px-4 border border-black">{appointment.city}</td>
+                                        <td className="py-2 px-4 border border-black">{appointment.state}</td>
+                                        <td className="py-2 px-4 border border-black">{appointment.mobile}</td>
+                                        <td className="py-2 px-4 border border-black">{appointment.gender}</td>
+                                        <td className="py-2 px-4 border border-black">{appointment.problem}</td>
+                                        <td className="py-2 px-4 border border-black">{appointment.doctor}</td>
+                                        <td className="py-2 px-4 border border-black">{new Date(appointment.dateTime).toLocaleString()}</td>
+                                        <td className="py-2 px-4 border border-black flex justify-center items-center gap-2">{appointment.status}
+                                            <Edit className="mr-2 cursor-pointer"
+                                                onClick={() => {
+                                                    toast.error("Server Busy........");
+                                                }}></Edit>
+                                            <img src='/alternate-trash.svg' alt='delete'
+                                                className='cursor-pointer' width={15} height={15}
+                                                onClick={() => {
+                                                    setDelAppId(appointment._id);
+                                                    setDelApp(true);
+                                                    setDelService(false)
+                                                    setDelPopup(true);
+                                                }}
+                                            />
+                                        </td>
+                                        <td className="py-2 px-4 border border-black">{appointment.query}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+
+                        </table>) : (
+                            <p>No pending appointments found</p>
+                        )}
+                    </div>
+
+                </div>
+
+                <div className={` w-full h-screen flex justify-center items-center absolute inset-0   ${delpopup ? 'bg-opacity-10 ' : ''}`}
+                // onClick={() => setDelPopup(false)}
+                >
+                    {/* Popup */}
+                    {delpopup && (
+                        <div className=" text-white p-16 px-8 bg-black shadow-lg border border-white absolute z-10  inset-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 text-center flex flex-col justify-center items-center rounded-lg">
+                            <p className='font-bold'>Are You Sure to Permanently Delete...</p>
+                            <div className="flex gap-5 justify-evenly mt-4">
+
+                                {
+                                    delApp && !delService && <button className='bg-red-400 px-2 py-1 rounded-lg hover:bg-red-700'
+                                        onClick={
+                                            () => deleteAppointment(delappid)
+                                        }>Yes appointment
+                                    </button>
+                                }
+                                {
+                                    !delApp && !delService && <button className='bg-red-400 px-2 py-1 rounded-lg hover:bg-red-700'
+                                        onClick={
+                                            () => deleteDoctor(deldoctorid)
+                                        }>Yes doctor
+                                    </button>
+                                }
+
+                                {
+                                    delService && <button className='bg-red-400 px-2 py-1 rounded-lg hover:bg-red-700'
+                                        onClick={
+                                            () => deleteServices(delServiceId)
+                                        }>Yes services
+                                    </button>
+                                }
+                                <button className='bg-green-500 px-2 py-1 rounded-lg hover:bg-yellow-300'
+                                    onClick={() => {
+                                        setDelAppId()
+                                        setDelDoctorId()
+                                        setDelServiceId()
+                                        setDelPopup(false)
+                                    }
+                                    }
+                                >No
+                                </button>
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div >
-        </PrivateRouteDashboard>
+        </div >
+        // </PrivateRouteDashboard>
     )
 };
 export default page;
