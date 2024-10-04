@@ -19,7 +19,7 @@ const DoctorCard = ({ doctor }) => {
     const { userLogin, setUserLogin, user, setUser, userrole, setUserRole } = useUser();
 
     return (
-        <article className="overflow-hidden rounded-lg shadow transition hover:shadow-lg p-3 border border-yellow-500 hover:border-blue-500 w-full">
+        <article className="overflow-hidden rounded-lg shadow transition hover:shadow-lg p-3 border border-yellow-500 hover:border-blue-500 w-full bg-white">
             {/* <div style={{ width: '255px', height: '350px', position: 'relative' }}> */}
             {/* <Image
                     alt="d1"
@@ -44,7 +44,7 @@ const DoctorCard = ({ doctor }) => {
                 </ p>
             }
 
-            <div className="bg-gray-300  pl-1 pt-2  text-start sm:pt-2 rounded-lg">
+            <div className="  pl-1 pt-2  text-start sm:pt-2 rounded-lg">
 
                 <p>
                     <h3 className="mt-[2px] text-lg text-black font-bold">{doctor.name} </h3>

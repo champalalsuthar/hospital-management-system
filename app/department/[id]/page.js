@@ -81,7 +81,7 @@ const DepartmentDetailPage = ({ params }) => {
                     <StarRating rating={4.6} /></p>
                 {/* <p className="text-gray-600 mb-4">{department.description} <strong>Reviews</strong></p> */}
 
-                <div className="m-4 mx-0 lg:mx-4 bg-light-ray-100 p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
+                <div className="m-4 mx-0 lg:mx-4 bg-white  p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
                     <h3 className="text-[22px] font-bold text-red-400 underline ">Details</h3>
                     {/* <p><strong>Price:</strong> ${department.price.toFixed(2)}</p> */}
                     {/* <p><strong>Email:</strong> {department.email}</p> */}
@@ -94,7 +94,7 @@ const DepartmentDetailPage = ({ params }) => {
                 </div>
 
                 {headDoctor && (
-                    <div className="m-4 mx-0 lg:mx-4 bg-light-ray-100 p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
+                    <div className="m-4 mx-0 lg:mx-4 bg-white  p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
                         <h3 className="text-2xl font-bold text-gray-700 mb-4">Head of Department</h3>
                         <div className="flex flex-col lg:flex-row items-center gap-8">
                             <img src={headDoctor.imageUrl} alt={headDoctor.name} className="w-40 h-40 rounded-full object-cover mr-6 border border-1 border-blue-600" />

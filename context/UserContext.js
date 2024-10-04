@@ -6,7 +6,7 @@ const UserContext = createContext({});
 export const UserProvider = ({ children }) => {
     const [userLogin, setUserLogin] = useState(false);
     const [user, setUser] = useState({});
-    const [doctorFormData,setDoctorFormData] = useState({});
+    const [doctorFormData, setDoctorFormData] = useState({});
     const [userrole, setUserRole] = useState();
     const [loading, setLoading] = useState(true); // New loading state
 
@@ -28,17 +28,17 @@ export const UserProvider = ({ children }) => {
                     console.log(data);
                     console.log(data.user);
                     if (response.ok && data.success) {
-                        setUser(data.user);
-                        setUserRole(data.user.role);
                         setUserLogin(true);
+                        setUserRole(data.user.role);
+                        setUser(data.user);
                     } else {
                         throw new Error(data.error || 'Invalid token');
                     }
                 } catch (error) {
                     console.error('Error verifying token:', error);
                     localStorage.removeItem('token');
-                    localStorage.removeItem('logeduserdata');
-                    localStorage.removeItem('logeduserrole');
+                    // localStorage.removeItem('logeduserdata');
+                    // localStorage.removeItem('logeduserrole');
                     setUserLogin(false);
                 }
             }

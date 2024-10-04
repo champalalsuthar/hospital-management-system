@@ -166,8 +166,8 @@ export default function DoctorDetailPage({ params }) {
 
     return (
         < div className="bg-gradient-to-l from-slate-300 to-slate-100 mt-16" >
-            <div className=" bg-gradient-to-l from-slate-300 to-slate-100 text-slate-600  shadow-lg  p-8 lg:p-16 ">
-                <div className="mx-0 lg:mx-4 bg-light-ray-100 p-4">
+            <div className=" text-slate-600  shadow-lg  p-8 lg:p-16 ">
+                <div className="mx-0 lg:mx-4 bg-white rounded-lg p-4">
                     <div className='h-40 w-40 lg:ml-4'>
                         {doctor.imageUrl &&
                             <Image
@@ -191,7 +191,7 @@ export default function DoctorDetailPage({ params }) {
                         <StarRating rating={doctor.rating} /></p>
                     {/* <p className="text-gray-600 mb-4">{doctor.reviews} <strong>Reviews</strong>  </p> */}
                 </div>
-                <div className="mx-0 lg:mx-4 bg-light-ray-100 p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
+                <div className="mt-4 mx-0 lg:mx-4 bg-white p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
                     <h3 className="text-[22px] font-bold text-red-400 underline ">Details</h3>
                     {/* <p><strong>Price:</strong> ${doctor.price.toFixed(2)}</p> */}
                     <p><strong>Email:</strong> {doctor.email}</p>
@@ -233,7 +233,7 @@ export default function DoctorDetailPage({ params }) {
                         )}
                     </ul>
                 </div> */}
-                <div className="mt-4 mx-0 lg:mx-4 bg-light-ray-100 p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
+                <div className="mt-4 mx-0 lg:mx-4 bg-white p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
                     <h3 className="text-[22px] font-bold text-red-400 underline">Services:</h3>
                     <ul className="list-disc ml-5">
                         {doctor?.services?.length > 0 ? (
@@ -247,7 +247,7 @@ export default function DoctorDetailPage({ params }) {
                         )}
                     </ul>
                 </div>
-                <div className="mt-4 mx-0 lg:mx-4 bg-light-ray-100 p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
+                <div className="mt-4 mx-0 lg:mx-4 bg-white p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
                     <h3 className="text-[22px] font-bold text-red-400 underline">Departments:</h3>
                     <ul className="list-disc ml-5">
 

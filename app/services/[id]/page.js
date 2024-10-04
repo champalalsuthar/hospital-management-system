@@ -49,8 +49,8 @@ export default function ServiceDetailPage({ params }) {
     if (!service) return <div className=" bg-gray-300 ds py-20 px-5 text-center"><p>Service not found</p></div>;
 
     return (
-        <div className="bg-gradient-to-l from-slate-300 to-slate-100 mt-16">
-            <div className=" bg-gradient-to-l from-slate-300 to-slate-100 text-slate-600  shadow-lg p-8 lg:p-16 ">
+        <div className="bg-gradient-to-l from-slate-300 to-slate-100  mt-16">
+            <div className=" bg-gradient-to-l from-slate-300 to-slate-100  text-slate-600  shadow-lg p-8 lg:p-16 ">
                 <h1 className="text-3xl font-bold text-light-blue-900 mb-4">{service.name}</h1>
                 <p className="text-gray-600 mb-4">
                     <StarRating rating={3.4} />
@@ -58,7 +58,7 @@ export default function ServiceDetailPage({ params }) {
                 <h2 className="text-xl font-semibold text-gray-700 mb-2">{service.short_description}</h2>
                 <p className="text-gray-600 mb-4">{service.description}</p>
 
-                <div className="mx-0 lg:mx-4 bg-light-ray-100 p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
+                <div className="mx-0 lg:mx-4 bg-white  p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
                     <h3 className="text-[22px] font-bold text-red-400 underline ">Details</h3>
                     <p><strong>Category:</strong> {service.category}</p>
                     <p><strong>Price:</strong> ${service.price.toFixed(2)}</p>
@@ -69,7 +69,7 @@ export default function ServiceDetailPage({ params }) {
                     </p>
                 </div>
 
-                <div className="mt-4 mx-0 lg:mx-4 bg-light-ray-100 p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
+                <div className="mt-4 mx-0 lg:mx-4 bg-white  p-4 rounded-lg shadow-md transform transition-transform duration-300 hover:shadow-xl hover:scale-105 border-2">
                     <h3 className="text-[22px] font-bold text-red-400 underline">Available Slots</h3>
                     <ul className="list-disc ml-5">
                         {service.availableSlots.map((slot, index) => (

@@ -16,7 +16,7 @@ const DepartmentCard = ({ department, index }) => {
   return (
     <div
       //  onClick={handleCardClick}
-      className={`w-50 bg-gradient-to-l from-slate-300 to-slate-100 text-slate-600 border border-slate-300 grid grid-col-2 justify-center p-4 gap-4 rounded-lg shadow-md 
+      className={`w-50 bg-white text-slate-600 border border-slate-300 grid grid-col-2 justify-center p-4 gap-4 rounded-lg shadow-md 
       transition-transform transform ${scaleClass} hover:border-blue-500 hover:border-solid hover:shadow-lg duration-300 ease-in-out ${rotateClass} `}>
       {/* <div class="col-span-2 text-lg font-bold capitalize rounded-md">
         {department.name}
